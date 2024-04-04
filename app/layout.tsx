@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Metadata } from 'next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Raleway } from 'next/font/google';
 import './globals.css';
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             disableTransitionOnChange
           >
             {children}
+            <SpeedInsights />
           </ThemeProvider>
         </body>
       </html>
