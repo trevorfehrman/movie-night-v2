@@ -56,6 +56,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ModeToggle } from './mode-toggle';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export function Dashboard() {
   return (
@@ -227,6 +228,14 @@ export function Dashboard() {
               />
             </div>
             <ModeToggle />
+            <SignedIn>
+              {/* Mount the UserButton component */}
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              {/* Signed out users get sign in button */}
+              <SignInButton />
+            </SignedOut>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='outline' size='icon' className='overflow-hidden rounded-full'>
