@@ -1,8 +1,21 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:drizzle/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:drizzle/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["drizzle"],
   "parserOptions": {
     "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off"
   }
 }

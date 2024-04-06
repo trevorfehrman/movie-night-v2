@@ -1,12 +1,13 @@
-import { Dashboard } from "@/components/dashboard";
-import { db } from "@/db";
+// import { db } from "@/db";
+// import { searchMovies } from "@/tmdb/movies";
 
 export default async function Home() {
-  const usersData = await db.query.users.findMany();
+  // const searchData = await searchMovies("the godfather");
+
+  // const usersData = await db.query.users.findMany();
   return (
-    <main>
-      {JSON.stringify(usersData)}
-      <Dashboard />
-    </main>
+    <>
+      <h1>hi</h1>
+    </>
   );
 }
