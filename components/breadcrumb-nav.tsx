@@ -14,7 +14,6 @@ import { usePathname } from "next/navigation";
 export function BreadcrumbNav() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
-  console.log(segments);
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>

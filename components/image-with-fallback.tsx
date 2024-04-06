@@ -9,9 +9,10 @@ export function ImageWithFallback(
     width: number;
     src: string;
     alt: string;
+    blurDataURL: string;
   },
 ) {
-  const { alt, src, height, width } = props;
+  const { alt, src, height, width, blurDataURL } = props;
   const [error, setError] = React.useState<React.SyntheticEvent<
     HTMLImageElement,
     Event
@@ -22,13 +23,17 @@ export function ImageWithFallback(
   }, [src]);
 
   return (
-    <Image
-      onError={setError}
-      {...props}
-      alt={alt}
-      src={error ? fallbackImage : src}
-      height={height}
-      width={width}
-    />
+    <div className="relative">
+      <Image
+        onError={setError}
+        {...props}
+        alt={alt}
+        src={error ? fallbackImage : src}
+        height={height}
+        width={width}
+        placeholder="blur"
+        blurDataURL={blurDataURL}
+      />
+    </div>
   );
 }

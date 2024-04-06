@@ -29,9 +29,9 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { searchMovies } from "@/tmdb/movies";
-import { ImageWithFallback } from "./image-with-fallback";
+import { ImageWithDataUrl } from "./image-with-data-url";
 
-export function SearchTable({
+export async function SearchTable({
   movies,
 }: {
   movies: Awaited<ReturnType<typeof searchMovies>>;
@@ -114,7 +114,7 @@ export function SearchTable({
                 {movies.results.map((movie) => (
                   <TableRow key={movie.id}>
                     <TableCell className="hidden sm:table-cell">
-                      <ImageWithFallback
+                      <ImageWithDataUrl
                         alt="Product image"
                         className="aspect-square rounded-md object-cover"
                         height={64}
