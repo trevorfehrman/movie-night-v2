@@ -23,17 +23,15 @@ export function ImageWithFallback(
   }, [src]);
 
   return (
-    <div className="relative">
-      <Image
-        onError={setError}
-        {...props}
-        alt={alt}
-        src={error ? fallbackImage : src}
-        height={height}
-        width={width}
-        placeholder="blur"
-        blurDataURL={blurDataURL}
-      />
-    </div>
+    <Image
+      onError={setError}
+      {...props}
+      alt={alt}
+      src={error ? fallbackImage : src}
+      height={height}
+      width={width}
+      placeholder="blur"
+      blurDataURL={blurDataURL}
+    />
   );
 }

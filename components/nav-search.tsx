@@ -3,13 +3,15 @@ import * as React from "react";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { Send } from "lucide-react";
 
 export function NavSearch() {
   const router = useRouter();
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   return (
-    <div className="relative ml-auto flex-1 md:grow-0">
+    <div className="relative ml-auto flex flex-1 gap-x-4 md:grow-0">
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
       <Input
         ref={inputRef}
@@ -27,6 +29,9 @@ export function NavSearch() {
         placeholder="Search..."
         className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
       />
+      <Button variant="default" size="icon" className="min-w-10 sm:hidden">
+        <Send className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
