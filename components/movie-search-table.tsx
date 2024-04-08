@@ -33,12 +33,8 @@ export const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
 
       return (
         <ImageWithFallback
-          alt="Product image"
-          height={123}
-          width={92}
-          className="rounded-md object-cover"
+          alt={`Poster for ${row.original.title}`}
           src={`https://image.tmdb.org/t/p/w92/${posterPath}`}
-          blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
         />
       );
     },

@@ -23,15 +23,15 @@ export default async function SearchMoviesPage({
 }: MovieSearchPageProps) {
   const movies = await searchMovies({ query, page });
   return (
-    <>
+    <Card>
+      <CardHeader>
+        <CardTitle>Results:</CardTitle>
+        <CardDescription>
+          Are these the movies you are looking for?
+        </CardDescription>
+      </CardHeader>
       {movies && movies.results.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Search Results</CardTitle>
-            <CardDescription>
-              Are these the movies you are looking for?
-            </CardDescription>
-          </CardHeader>
+        <>
           <CardContent>
             <MovieSearchTable
               columns={movieSearchColumns}
@@ -59,8 +59,8 @@ export default async function SearchMoviesPage({
               of <strong>{movies.total_results}</strong> results
             </div>
           </CardFooter>
-        </Card>
+        </>
       )}
-    </>
+    </Card>
   );
 }

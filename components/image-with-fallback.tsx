@@ -5,14 +5,10 @@ import fallbackImage from "../public/next-image-fallback.webp";
 
 export function ImageWithFallback(
   props: React.ComponentProps<typeof Image> & {
-    height: number;
-    width: number;
-    src: string;
     alt: string;
-    blurDataURL: string;
   },
 ) {
-  const { alt, src, height, width, blurDataURL } = props;
+  const { alt, src } = props;
   const [error, setError] = React.useState<React.SyntheticEvent<
     HTMLImageElement,
     Event
@@ -23,15 +19,20 @@ export function ImageWithFallback(
   }, [src]);
 
   return (
-    <Image
-      onError={setError}
-      {...props}
-      alt={alt}
-      src={error ? fallbackImage : src}
-      height={height}
-      width={width}
-      placeholder="blur"
-      blurDataURL={blurDataURL}
-    />
+    <div className="relative h-[64px] w-auto">
+      <Image
+        onError={setError}
+        loader={({ src }) => src}
+        unoptimized
+        {...props}
+        alt={alt}
+        src={error ? fallbackImage : src}
+        sizes="auto"
+        fill
+        className=" rounded-md object-cover"
+        placeholder="blur"
+        blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+      />
+    </div>
   );
 }
