@@ -21,7 +21,9 @@ export function NavSearch() {
         value={inputRef.current?.value}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            router.push(`/search-movies?query=${inputRef.current?.value}`);
+            router.push(
+              `/search-movies?query=${inputRef.current?.value}&page=1`,
+            );
             inputRef.current && (inputRef.current.value = "");
           }
         }}
@@ -29,7 +31,14 @@ export function NavSearch() {
         placeholder="Search..."
         className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
       />
-      <Button variant="default" size="icon" className="min-w-10 sm:hidden">
+      <Button
+        variant="default"
+        size="icon"
+        className="min-w-10 sm:hidden"
+        onClick={() =>
+          router.push(`/search-movies?query=${inputRef.current?.value}&page=1`)
+        }
+      >
         <Send className="h-4 w-4" />
       </Button>
     </div>

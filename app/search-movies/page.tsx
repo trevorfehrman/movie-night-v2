@@ -1,5 +1,5 @@
 import { searchMovies } from "@/tmdb/movies";
-import { File, ListFilter, MoreHorizontal, PlusCircle } from "lucide-react";
+import { File, ListFilter, PlusCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,28 +14,22 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageWithDataUrl } from "@/components/image-with-data-url";
+import {
+  MovieSearchTable,
+  movieSearchColumns,
+} from "@/components/movie-search-table";
 
 export default async function SearchMoviesPage({
-  searchParams: { query = "" },
+  searchParams: { query = "", page = "" },
 }: {
-  searchParams: { query: string };
+  searchParams: { query: string; page: string };
 }) {
-  const movies = await searchMovies(query);
+  const movies = await searchMovies({ query, page });
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
@@ -82,16 +76,24 @@ export default async function SearchMoviesPage({
         </div>
       </div>
       <TabsContent value="all">
-        {movies.results.length > 0 && (
+        {movies && movies.results.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Search Results</CardTitle>
               <CardDescription>
-                Manage your products and view their sales performance.
+                Are these the movies you are looking for?
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
+              <MovieSearchTable
+                columns={movieSearchColumns}
+                data={movies.results}
+                totalResults={movies.total_results}
+                totalPages={movies.total_pages}
+                page={Number(page)}
+                query={query}
+              />
+              {/* <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="hidden w-[100px] sm:table-cell">
@@ -154,11 +156,15 @@ export default async function SearchMoviesPage({
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+              </Table> */}
             </CardContent>
             <CardFooter>
               <div className="text-xs text-muted-foreground">
-                Showing <strong>1-10</strong> of <strong>32</strong> products
+                Showing{" "}
+                <strong>
+                  {Number(page) * 20 - 19} - {Number(page) * 20}
+                </strong>{" "}
+                of <strong>{movies.total_results}</strong> results
               </div>
             </CardFooter>
           </Card>
@@ -167,3 +173,5 @@ export default async function SearchMoviesPage({
     </Tabs>
   );
 }
+
+//
