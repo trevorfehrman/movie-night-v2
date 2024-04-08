@@ -42,8 +42,8 @@ export async function searchMovies({
   query,
   page,
 }: {
-  query: string;
-  page: string;
+  query?: string;
+  page?: string;
 }) {
   const searchMoviesUrl = new URL(
     `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US`,

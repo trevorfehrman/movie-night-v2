@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { Routes } from "@/lib/routes";
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -20,7 +21,7 @@ export function MobileNav() {
       <SheetContent side="left" className="sm:max-w-xs">
         <nav className="grid gap-6 text-lg font-medium">
           <Link
-            href="/"
+            href={Routes.home()}
             className={cn(
               "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
               pathname === "/" && "text-foreground",
@@ -32,7 +33,7 @@ export function MobileNav() {
             Home
           </Link>
           <Link
-            href="/search-movies"
+            href={Routes.searchMovies()}
             className={cn(
               "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
               pathname === "/search-movies" && "text-foreground",

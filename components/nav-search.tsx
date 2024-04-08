@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
+import { Routes } from "@/lib/routes";
 
 export function NavSearch() {
   const router = useRouter();
@@ -22,7 +23,9 @@ export function NavSearch() {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             router.push(
-              `/search-movies?query=${inputRef.current?.value}&page=1`,
+              Routes.searchMovies({
+                search: { query: inputRef.current?.value, page: String(1) },
+              }),
             );
             inputRef.current && (inputRef.current.value = "");
           }
@@ -35,9 +38,15 @@ export function NavSearch() {
         variant="default"
         size="icon"
         className="min-w-10 sm:hidden"
-        onClick={() =>
-          router.push(`/search-movies?query=${inputRef.current?.value}&page=1`)
-        }
+        onClick={() => {
+          router.push(
+            Routes.searchMovies(
+              {},
+              { search: { query: inputRef.current?.value, page: String(1) } },
+            ),
+          );
+          inputRef.current && (inputRef.current.value = "");
+        }}
       >
         <Send className="h-4 w-4" />
       </Button>

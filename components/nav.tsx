@@ -10,6 +10,7 @@ import {
 import { Settings, Film, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Routes } from "@/lib/routes";
 
 export function Nav() {
   const pathname = usePathname();
@@ -17,7 +18,7 @@ export function Nav() {
     <TooltipProvider>
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          href="/"
+          href={Routes.home()}
           className={cn(
             "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base",
             pathname === "/"
@@ -32,7 +33,7 @@ export function Nav() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/search-movies"
+              href={Routes.searchMovies()}
               className={cn(
                 "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base",
                 pathname === "/search-movies"

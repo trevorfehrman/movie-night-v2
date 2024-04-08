@@ -18,15 +18,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ImageWithFallback } from "./image-with-fallback";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 
@@ -76,35 +67,6 @@ export const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
       <div className="line-clamp-2">{row.getValue("overview")}</div>
     ),
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(String(payment.id))}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
 ];
 
 interface DataTableProps<TData, TValue> {
@@ -113,7 +75,7 @@ interface DataTableProps<TData, TValue> {
   totalResults: number;
   totalPages: number;
   page: number;
-  query: string;
+  query?: string;
 }
 
 export function MovieSearchTable<TData, TValue>({
