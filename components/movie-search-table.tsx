@@ -1,6 +1,6 @@
 "use client";
 
-import { MovieSearchResult } from "@/tmdb/movies";
+import { MovieSearchResult } from "@/lib/tmdb/movies";
 
 import {
   ColumnDef,

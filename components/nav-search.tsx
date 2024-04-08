@@ -23,9 +23,12 @@ export function NavSearch() {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             router.push(
-              Routes.searchMovies({
-                search: { query: inputRef.current?.value, page: String(1) },
-              }),
+              Routes.searchMovies(
+                {},
+                {
+                  search: { query: inputRef.current?.value, page: String(1) },
+                },
+              ),
             );
             inputRef.current && (inputRef.current.value = "");
           }
@@ -40,10 +43,11 @@ export function NavSearch() {
         className="min-w-10 sm:hidden"
         onClick={() => {
           router.push(
-            Routes.searchMovies(
-              {},
-              { search: { query: inputRef.current?.value, page: String(1) } },
-            ),
+            "/" +
+              Routes.searchMovies(
+                {},
+                { search: { query: inputRef.current?.value, page: String(1) } },
+              ),
           );
           inputRef.current && (inputRef.current.value = "");
         }}

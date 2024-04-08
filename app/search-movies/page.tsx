@@ -1,4 +1,4 @@
-import { searchMovies } from "@/tmdb/movies";
+import { searchMovies } from "@/lib/tmdb/movies";
 
 import {
   Card,

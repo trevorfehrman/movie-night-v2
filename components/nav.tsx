@@ -42,10 +42,10 @@ export function Nav() {
               )}
             >
               <Search className="h-5 w-5" />
-              <span className="sr-only">Dashboard</span>
+              <span className="sr-only">Search Movies</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Dashboard</TooltipContent>
+          <TooltipContent side="right">Search Movies</TooltipContent>
         </Tooltip>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
