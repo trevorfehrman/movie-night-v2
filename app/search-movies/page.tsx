@@ -32,7 +32,7 @@ export default async function SearchMoviesPage({
       </CardHeader>
       {movies && movies.results.length > 0 && (
         <>
-          <CardContent>
+          <CardContent className="px-0 sm:p-6">
             <MovieSearchTable
               columns={movieSearchColumns}
               data={movies.results}

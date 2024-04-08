@@ -79,7 +79,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             </ClerkLoaded>
           </div>
         </header>
-        <main className="mx-auto grid max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <main className="mx-auto grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-0 sm:px-6 sm:py-0 md:gap-8">
           {children}
         </main>
       </div>

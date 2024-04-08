@@ -20,6 +20,7 @@ import {
 import { ImageWithFallback } from "./image-with-fallback";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -27,6 +28,7 @@ import { useRouter } from "next/navigation";
 export const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
   {
     accessorKey: "poster_path",
+
     header: "Poster",
     cell: ({ row }) => {
       const posterPath = row.original.poster_path;
@@ -42,25 +44,26 @@ export const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
   {
     accessorKey: "title",
     header: "Title",
+    cell: ({ row }) => row.original.title,
   },
   {
     accessorKey: "release_date",
-    header: "Year",
+    header: () => "Year",
     cell: ({ row }) => {
       const releaseDate = row.original.release_date;
-      return <div>{releaseDate.split("-")[0]}</div>;
+      return releaseDate.split("-")[0];
     },
   },
   {
     accessorKey: "vote_average",
-    header: "Score",
+    header: () => "Score",
     cell: ({ row }) => row.original.vote_average.toFixed(1),
   },
   {
     accessorKey: "overview",
-    header: "Story",
+    header: () => "Story",
     cell: ({ row }) => (
-      <div className="line-clamp-2">{row.getValue("overview")}</div>
+      <div className="line-clamp-2">{row.original.overview}</div>
     ),
   },
 ];
@@ -100,6 +103,7 @@ export function MovieSearchTable<TData, TValue>({
 
   const router = useRouter();
 
+  const hiddenColumns = ["overview", "vote_average", "release_date"];
   return (
     <div>
       <div className="rounded-md border">
@@ -109,7 +113,13 @@ export function MovieSearchTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn(
+                        hiddenColumns.includes(header.column.id) && "hidden",
+                        "md:table-cell",
+                      )}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -130,7 +140,13 @@ export function MovieSearchTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        hiddenColumns.includes(cell.column.id) && "hidden",
+                        "md:table-cell",
+                      )}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

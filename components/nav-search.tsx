@@ -40,7 +40,7 @@ export function NavSearch() {
       <Button
         variant="default"
         size="icon"
-        className="min-w-10 sm:hidden"
+        className="min-w-10"
         onClick={() => {
           router.push(
             "/" +
