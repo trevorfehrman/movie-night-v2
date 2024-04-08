@@ -161,9 +161,17 @@ export default async function SearchMoviesPage({
             <CardFooter>
               <div className="text-xs text-muted-foreground">
                 Showing{" "}
-                <strong>
-                  {Number(page) * 20 - 19} - {Number(page) * 20}
-                </strong>{" "}
+                {Number(page) < movies.total_pages && (
+                  <strong>
+                    {Number(page) * 20 - 19} - {Number(page) * 20}
+                  </strong>
+                )}
+                {Number(page) === movies.total_pages && (
+                  <strong>
+                    {Number(page) * 20 - 19} -{" "}
+                    {Number(page) * 20 - 20 + (movies.total_results % 20)}
+                  </strong>
+                )}{" "}
                 of <strong>{movies.total_results}</strong> results
               </div>
             </CardFooter>

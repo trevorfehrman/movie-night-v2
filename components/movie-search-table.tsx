@@ -140,13 +140,10 @@ export function MovieSearchTable<TData, TValue>({
     autoResetPageIndex: false,
   });
 
-  const pageIndex = table.getState().pagination.pageIndex;
-
   const router = useRouter();
 
   return (
     <div>
-      <pre>{pageIndex}</pre>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -202,7 +199,7 @@ export function MovieSearchTable<TData, TValue>({
           variant="outline"
           size="sm"
           onClick={() => {
-            table.setPageIndex(pageIndex - 1);
+            table.setPageIndex((prev) => prev - 1);
             router.push(
               `/search-movies?query=${query}&page=${String(page - 1)}`,
             );
@@ -215,7 +212,7 @@ export function MovieSearchTable<TData, TValue>({
           variant="outline"
           size="sm"
           onClick={() => {
-            table.setPageIndex(pageIndex + 1);
+            table.setPageIndex((prev) => prev + 1);
             router.push(
               `/search-movies?query=${query}&page=${String(page + 1)}`,
             );
