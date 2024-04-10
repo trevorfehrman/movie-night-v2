@@ -10,7 +10,9 @@ import queryString from "query-string";
 import { Routes } from "./routes";
 
 type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {
+  // eslint-disable-next-line no-unused-vars
   (p?: z.input<Params>, options?: { search?: z.input<Search> }): string;
+  // eslint-disable-next-line no-unused-vars
   parse: (input: z.input<Params>) => z.output<Params>;
   useParams: () => z.output<Params>;
   useSearchParams: () => z.output<Search>;
@@ -24,6 +26,7 @@ export function makeRoute<
   Params extends z.ZodSchema,
   Search extends z.ZodSchema,
 >(
+  // eslint-disable-next-line no-unused-vars
   fn: (p: z.input<Params>) => string,
   paramsSchema: Params = empty as Params,
   search: Search = empty as Search,

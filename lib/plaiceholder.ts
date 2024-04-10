@@ -133,6 +133,7 @@ type GetSVGReturn = [
 ];
 
 interface IGetSVG {
+  // eslint-disable-next-line no-unused-vars
   (options: IGetSVGOptions): GetSVGReturn;
 }
 
