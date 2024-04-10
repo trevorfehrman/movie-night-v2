@@ -30,7 +30,6 @@ export default async function SearchMoviesPage({
   const blurDataURLs = await Promise.all(posterPathPromises);
   return (
     <main className="mx-auto grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-0 sm:px-6 sm:py-0 md:gap-8">
-      <h1>{JSON.stringify(blurDataURLs.length)}</h1>
       <Card>
         <CardHeader>
           <CardTitle>Results:</CardTitle>
