@@ -3,8 +3,6 @@ import * as React from "react";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
-import { Send } from "lucide-react";
 import { Routes } from "@/lib/routes";
 
 export function NavSearch() {
@@ -37,23 +35,6 @@ export function NavSearch() {
         placeholder="Search..."
         className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
       />
-      <Button
-        variant="default"
-        size="icon"
-        className="min-w-10"
-        onClick={() => {
-          router.push(
-            "/" +
-              Routes.searchMovies(
-                {},
-                { search: { query: inputRef.current?.value, page: String(1) } },
-              ),
-          );
-          inputRef.current && (inputRef.current.value = "");
-        }}
-      >
-        <Send className="h-4 w-4" />
-      </Button>
     </div>
   );
 }

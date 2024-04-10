@@ -17,77 +17,89 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ImageWithFallback } from "./image-with-fallback";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Routes } from "@/lib/routes";
+import { ImageWithFallback } from "./image-with-fallback";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
-  {
-    accessorKey: "poster_path",
-
-    header: "Poster",
-    cell: ({ row }) => {
-      const posterPath = row.original.poster_path;
-
-      return (
-        <ImageWithFallback
-          alt={`Poster for ${row.original.title}`}
-          src={`https://image.tmdb.org/t/p/w92/${posterPath}`}
-        />
-      );
-    },
-  },
-  {
-    accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => row.original.title,
-  },
-  {
-    accessorKey: "release_date",
-    header: () => "Year",
-    cell: ({ row }) => {
-      const releaseDate = row.original.release_date;
-      return releaseDate.split("-")[0];
-    },
-  },
-  {
-    accessorKey: "vote_average",
-    header: () => "Score",
-    cell: ({ row }) => row.original.vote_average.toFixed(1),
-  },
-  {
-    accessorKey: "overview",
-    header: () => "Story",
-    cell: ({ row }) => (
-      <div className="line-clamp-2">{row.original.overview}</div>
-    ),
-  },
-];
-
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalResults: number;
   totalPages: number;
   page: number;
   query?: string;
+  blurDataURLs: (string | undefined)[];
 }
 
-export function MovieSearchTable<TData, TValue>({
-  columns,
+export function MovieSearchTable<TData extends MovieSearchResult, TValue>({
+  // columns,
   data,
   totalResults,
   totalPages,
   page,
   query,
+  blurDataURLs,
 }: DataTableProps<TData, TValue>) {
+  const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
+    {
+      accessorKey: "poster_path",
+
+      header: "Poster",
+      cell: ({ row }) => {
+        const posterPath = row.original.poster_path;
+
+        return (
+          <div className="aspect-movie-poster relative h-20">
+            <ImageWithFallback
+              alt={`Poster for ${row.original.title}`}
+              src={`https://image.tmdb.org/t/p/w92/${posterPath}`}
+              placeholder="blur"
+              blurDataURL={
+                blurDataURLs[row.index] ||
+                "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAA7AGkDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAIDAQQG/8QAGhABAQEBAQEBAAAAAAAAAAAAAAECEhEDE//EABgBAQEBAQEAAAAAAAAAAAAAAAECAAME/8QAFxEBAQEBAAAAAAAAAAAAAAAAABEBEv/aAAwDAQACEQMRAD8A9Oys9Za8L0xlJo1pNVoqEpKa0lpgAhfRKYVZT5RlUzWK0PEpTSsIoPS+j0phOmdJ9M6aOvKl0TWi3SetmGG1pO6Lrad2YmKdDpG7HbQOiaPnTmmzzbRWY6po805Zs820VHR0Okeh0YOSdsu0Oy3a+XRa7T1tK7T19GidV1sl2jr6J36NEavdjtzfo2bMZ1TZ5tyTZ5s8qx1zZ5tyzZps8rx1dt7c3Y7bkl6LdMLVxDNaT1puktJ3BrNbTuxolCTdtmkjQ4cWmlM6QyplcUtNHmkoeGFTodFDM//Z"
+              }
+              sizes="auto"
+              fill
+              className="rounded-md object-cover"
+            />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "title",
+      header: "Title",
+      cell: ({ row }) => row.original.title,
+    },
+    {
+      accessorKey: "release_date",
+      header: () => "Year",
+      cell: ({ row }) => {
+        const releaseDate = row.original.release_date;
+        return releaseDate.split("-")[0];
+      },
+    },
+    {
+      accessorKey: "vote_average",
+      header: () => "Score",
+      cell: ({ row }) => row.original.vote_average.toFixed(1),
+    },
+    {
+      accessorKey: "overview",
+      header: () => "Story",
+      cell: ({ row }) => (
+        <div className="line-clamp-2">{row.original.overview}</div>
+      ),
+    },
+  ];
+
   const table = useReactTable({
     data,
-    columns,
+    columns: movieSearchColumns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     rowCount: totalResults,
@@ -138,6 +150,14 @@ export function MovieSearchTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    router.push(
+                      Routes.movieDetails({
+                        movieId: String(row.original.id),
+                      }),
+                    );
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -158,7 +178,7 @@ export function MovieSearchTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={movieSearchColumns.length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -185,6 +205,7 @@ export function MovieSearchTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
+          className={cn(!table.getCanNextPage() && "cursor-pointer")}
           onClick={() => {
             table.setPageIndex((prev) => prev + 1);
             router.push(

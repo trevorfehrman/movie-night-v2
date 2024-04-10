@@ -13,4 +13,8 @@ export const Routes = {
     z.object({}),
     SearchMoviesSearchParams,
   ),
+  movieDetails: makeRoute(
+    ({ movieId }) => `/movie-details/${movieId}`,
+    z.object({ movieId: z.string() }),
+  ),
 };

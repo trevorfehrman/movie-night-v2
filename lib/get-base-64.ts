@@ -1,6 +1,10 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { getPlaiceholder } from "./plaiceholder";
 
-export async function getBase64(imgUrl: string) {
+export async function getBase64(imgUrl: string | StaticImport) {
+  if (typeof imgUrl !== "string") {
+    return undefined;
+  }
   try {
     const res = await fetch(imgUrl);
     if (!res.ok) {

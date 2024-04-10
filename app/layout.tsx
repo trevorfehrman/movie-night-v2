@@ -18,7 +18,8 @@ import { Nav } from "@/components/nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { NavSearch } from "@/components/nav-search";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -65,7 +66,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <NavSearch />
           <ModeToggle />
 
-          <div className="size-8">
+          <div className="flex size-10 items-center justify-center">
             <ClerkLoading>
               <LoaderCircle className="animate-spin" />
             </ClerkLoading>
@@ -74,14 +75,16 @@ function Layout({ children }: { children: React.ReactNode }) {
                 <UserButton />
               </SignedIn>
               <SignedOut>
-                <SignInButton />
+                <SignInButton>
+                  <Button size="icon" variant="outline" aria-label="Sign in">
+                    <User />
+                  </Button>
+                </SignInButton>
               </SignedOut>
             </ClerkLoaded>
           </div>
         </header>
-        <main className="mx-auto grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-0 sm:px-6 sm:py-0 md:gap-8">
-          {children}
-        </main>
+        {children}
       </div>
     </div>
   );
