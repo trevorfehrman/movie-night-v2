@@ -16,6 +16,7 @@ export function ImageWithFallback(props: ImageProps) {
   }, [src]);
 
   return (
+    // eslint-disable-next-line jsx-a11y/alt-text
     <Image onError={setError} {...props} src={error ? fallbackImage : src} />
   );
 }

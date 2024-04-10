@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Routes } from "@/lib/routes";
 import { getMovieDetails } from "@/lib/tmdb/movies";
-import { ChevronLeft, PlusCircle, Table, Upload } from "lucide-react";
+import { ChevronLeft, PlusCircle } from "lucide-react";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
 
 type MovieSearchPageProps = {

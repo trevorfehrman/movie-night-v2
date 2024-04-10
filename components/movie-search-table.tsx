@@ -26,7 +26,7 @@ import { ImageWithFallback } from "./image-with-fallback";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData> {
   data: TData[];
   totalResults: number;
   totalPages: number;
@@ -35,7 +35,7 @@ interface DataTableProps<TData, TValue> {
   blurDataURLs: (string | undefined)[];
 }
 
-export function MovieSearchTable<TData extends MovieSearchResult, TValue>({
+export function MovieSearchTable<TData extends MovieSearchResult>({
   // columns,
   data,
   totalResults,
@@ -43,7 +43,7 @@ export function MovieSearchTable<TData extends MovieSearchResult, TValue>({
   page,
   query,
   blurDataURLs,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const movieSearchColumns: ColumnDef<MovieSearchResult>[] = [
     {
       accessorKey: "poster_path",
