@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -87,36 +88,40 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div className="grid gap-4">
                     <div className="space-y-2">
                       <h4>Overview:</h4>
-                      <blockquote className="text-balance border-l-2 pl-6 italic dark:border-primary">
+                      <blockquote className="text-balance border-l-2 border-primary pl-6 italic">
                         {movieDetails.overview}
                       </blockquote>
                     </div>
-                    <div className="flex gap-4 rounded-md p-4 md:justify-end">
-                      {movieDetails.production_companies
-                        .filter((company) => Boolean(company.logo_path))
-                        .map((company) => (
-                          <div key={company.id} className="relative size-14">
-                            <ImageWithDataUrl
-                              alt={company.name}
-                              src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
-                              className="object-contain grayscale dark:invert"
-                              fill
-                              sizes="auto"
-                            />
-                          </div>
-                        ))}
-                    </div>
                   </div>
                 </CardContent>
+                <CardFooter>
+                  <div className="flex gap-4">
+                    {movieDetails.production_companies
+                      .filter((company) => Boolean(company.logo_path))
+                      .map((company) => (
+                        <div key={company.id} className="relative size-14">
+                          <ImageWithDataUrl
+                            alt={company.name}
+                            src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                            className="object-contain grayscale dark:invert"
+                            fill
+                            sizes="auto"
+                          />
+                        </div>
+                      ))}
+                  </div>
+                </CardFooter>
               </Card>
               {(officialTrailerId || backupTrailerId) && (
-                <Card className="overflow-hidden">
-                  <iframe
-                    title={`Trailer for ${movieDetails.title}`}
-                    src={`https://www.youtube.com/embed/${officialTrailerId || backupTrailerId}`}
-                    allowFullScreen
-                    className="aspect-video w-full"
-                  />
+                <Card>
+                  <CardContent className="pt-6">
+                    <iframe
+                      title={`Trailer for ${movieDetails.title}`}
+                      src={`https://www.youtube.com/embed/${officialTrailerId || backupTrailerId}`}
+                      allowFullScreen
+                      className="aspect-video w-full"
+                    />
+                  </CardContent>
                 </Card>
               )}
               <Card x-chunk="dashboard-07-chunk-2">
