@@ -25,14 +25,19 @@ type MovieSearchPageProps = {
 export default async function Page({ params }: MovieSearchPageProps) {
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
 
-  const date = movieDetails ? new Date(movieDetails.release_date) : "";
-  const readableDate = date
-    ? new Intl.DateTimeFormat("default", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(date)
-    : "";
+  let readableDate;
+  try {
+    const date = movieDetails ? new Date(movieDetails.release_date) : "";
+    readableDate = date
+      ? new Intl.DateTimeFormat("default", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(date)
+      : "";
+  } catch (e) {
+    console.error(e);
+  }
 
   const officialTrailerId = movieDetails?.videos.results.find(
     (video) =>
@@ -72,7 +77,8 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       }
                     </h3>
                     <CardDescription>
-                      {readableDate} | {movieDetails.runtime}m
+                      {readableDate && `${readableDate} | `}
+                      {movieDetails.runtime !== 0 && `${movieDetails.runtime}m`}
                     </CardDescription>
                     <CardDescription>{movieDetails.tagline}</CardDescription>
                   </div>

@@ -135,7 +135,7 @@ const MovieDetailsSchema = z.object({
   original_title: z.string(),
   overview: z.string(),
   popularity: z.number(),
-  poster_path: z.string(),
+  poster_path: z.string().nullish(),
   production_companies: z.array(
     z.object({
       id: z.number(),
