@@ -3,11 +3,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Routes } from "@/lib/routes";
 import { getMovieDetails } from "@/lib/tmdb/movies";
-import { ChevronLeft, PlusCircle } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
 
 type MovieSearchPageProps = {
@@ -36,6 +34,17 @@ export default async function Page({ params }: MovieSearchPageProps) {
       }).format(date)
     : "";
 
+  const officialTrailerId = movieDetails?.videos.results.find(
+    (video) =>
+      video.type === "Trailer" &&
+      video.site === "YouTube" &&
+      video.official === true,
+  )?.key;
+
+  const backupTrailerId = movieDetails?.videos.results.find(
+    (video) => video.type === "Trailer" && video.site === "YouTube",
+  )?.key;
+
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       {movieDetails && (
@@ -51,54 +60,59 @@ export default async function Page({ params }: MovieSearchPageProps) {
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-              <Card x-chunk="dashboard-07-chunk-0">
+              <Card>
                 <CardHeader>
-                  <CardTitle as="h2">
-                    {movieDetails.title} |{" "}
-                    {
-                      movieDetails.credits.crew.find(
-                        (person) => person.job.toLowerCase() === "director",
-                      )?.name
-                    }
-                  </CardTitle>
-                  <CardDescription>
-                    {readableDate} | {movieDetails.runtime}m
-                  </CardDescription>
-                  <CardDescription> {movieDetails.tagline}</CardDescription>
+                  <div>
+                    <CardTitle as="h2">{movieDetails.title}</CardTitle>
+                    <h3 className="dark:text-primary">
+                      {
+                        movieDetails.credits.crew.find(
+                          (person) => person.job.toLowerCase() === "director",
+                        )?.name
+                      }
+                    </h3>
+                    <CardDescription>
+                      {readableDate} | {movieDetails.runtime}m
+                    </CardDescription>
+                    <CardDescription>{movieDetails.tagline}</CardDescription>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-6">
-                    <div className="grid gap-3">
-                      <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        className="w-full"
-                        defaultValue="Gamer Gear Pro Controller"
-                      />
+                  <div className="grid gap-4">
+                    <div className="space-y-2">
+                      <h4>Overview:</h4>
+                      <blockquote className="text-balance border-l-2 pl-6 italic dark:border-primary">
+                        {movieDetails.overview}
+                      </blockquote>
                     </div>
-                    <div className="grid gap-3">
-                      <Label htmlFor="story">Story</Label>
-                      {movieDetails.overview}
+                    <div className="flex gap-4 rounded-md p-4 md:justify-end">
+                      {movieDetails.production_companies
+                        .filter((company) => Boolean(company.logo_path))
+                        .map((company) => (
+                          <div key={company.id} className="relative size-14">
+                            <ImageWithDataUrl
+                              alt={company.name}
+                              src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                              className="object-contain grayscale dark:invert"
+                              fill
+                              sizes="auto"
+                            />
+                          </div>
+                        ))}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              <Card x-chunk="dashboard-07-chunk-1">
-                <CardHeader>
-                  <CardTitle>Stock</CardTitle>
-                  <CardDescription>
-                    Lipsum dolor sit amet, consectetur adipiscing elit
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>hi</CardContent>
-                <CardFooter className="justify-center border-t p-4">
-                  <Button size="sm" variant="ghost" className="gap-1">
-                    <PlusCircle className="h-3.5 w-3.5" />
-                    Add Variant
-                  </Button>
-                </CardFooter>
-              </Card>
+              {(officialTrailerId || backupTrailerId) && (
+                <Card className="overflow-hidden">
+                  <iframe
+                    title={`Trailer for ${movieDetails.title}`}
+                    src={`https://www.youtube.com/embed/${officialTrailerId || backupTrailerId}`}
+                    allowFullScreen
+                    className="aspect-video w-full"
+                  />
+                </Card>
+              )}
               <Card x-chunk="dashboard-07-chunk-2">
                 <CardHeader>
                   <CardTitle>Product Category</CardTitle>
@@ -151,16 +165,8 @@ export default async function Page({ params }: MovieSearchPageProps) {
             </div>
             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
               <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
-                <CardHeader>
-                  <CardTitle>Theatrical Poster</CardTitle>
-                  <CardDescription className="space-x-2">
-                    {movieDetails.production_companies.map((company) => (
-                      <span key={company.id}>{company.name}</span>
-                    ))}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-2">
+                <CardContent className="pt-6">
+                  <div className="grid gap-4">
                     <ImageWithDataUrl
                       alt="Product image"
                       className="aspect-movie-poster h-auto w-full rounded-md object-cover"

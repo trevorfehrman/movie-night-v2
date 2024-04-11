@@ -177,11 +177,11 @@ const MovieDetailsSchema = z.object({
 });
 
 export async function getMovieDetails({ movieId }: { movieId?: string }) {
-  const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=credits%2Ckeywords%2Cvideos&language=en-US`;
   if (!movieId) {
     return;
   }
 
+  const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=credits%2Ckeywords%2Cvideos&language=en-US`;
   const response = await fetch(movieDetailsUrl, options);
 
   if (!response.ok) {
