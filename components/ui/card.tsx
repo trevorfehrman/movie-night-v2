@@ -33,12 +33,22 @@ const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement> & { as?: React.ElementType }
 >(({ className, as, ...props }, ref) => {
-  return as === "h2" ? (
+  return as === "h1" ? (
+    // eslint-disable-next-line jsx-a11y/heading-has-content
+    <h1
+      ref={ref}
+      className={cn(
+        "scroll-m-20 text-4xl font-extrabold leading-none tracking-tight lg:text-5xl",
+        className,
+      )}
+      {...props}
+    />
+  ) : as === "h2" ? (
     // eslint-disable-next-line jsx-a11y/heading-has-content
     <h2
       ref={ref}
       className={cn(
-        "text-2xl font-semibold leading-none tracking-tight",
+        "scroll-m-20 border-b pb-2 text-3xl font-semibold leading-none tracking-tight first:mt-0",
         className,
       )}
       {...props}
@@ -48,7 +58,7 @@ const CardTitle = React.forwardRef<
     <h3
       ref={ref}
       className={cn(
-        "text-2xl font-semibold leading-none tracking-tight",
+        "tracking-tight, scroll-m-20 text-2xl font-semibold leading-none",
         className,
       )}
       {...props}

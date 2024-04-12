@@ -1,4 +1,5 @@
 "use client";
+import * as React from "react";
 
 import Link from "next/link";
 import {
@@ -6,43 +7,48 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  // BreadcrumbPage,
-  // BreadcrumbSeparator,
+  BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { usePathname } from "next/navigation";
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
+  const segmentPlusHome = ["/", ...segments];
+
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
-        {segments.map((segment, index) => {
+        {segmentPlusHome.map((segment, index) => {
+          let readableSegment = segment
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+
+          const num = Number(readableSegment);
+          if (!isNaN(num)) {
+            readableSegment = `TMDB Id: ${num}`;
+          }
+
+          if (readableSegment === "/") {
+            readableSegment = "Home";
+          }
+
           return (
-            <BreadcrumbItem key={segment}>
-              <BreadcrumbLink asChild>
-                <Link href={`/${segments.slice(0, index + 1).join("/")}`}>
-                  {segment}
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+            <React.Fragment key={segment}>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link
+                    href={`/${segmentPlusHome.slice(1, index + 1).join("/")}`}
+                  >
+                    {readableSegment}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              {index !== segmentPlusHome.length - 1 && <BreadcrumbSeparator />}
+            </React.Fragment>
           );
         })}
-        {/* <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="#">Dashboard</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="#">Products</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
-        </BreadcrumbItem> */}
       </BreadcrumbList>
     </Breadcrumb>
   );

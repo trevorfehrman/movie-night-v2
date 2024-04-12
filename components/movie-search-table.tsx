@@ -151,6 +151,18 @@ export function MovieSearchTable<TData extends MovieSearchResult>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className="cursor-pointer"
+                  role="button"
+                  aria-label={`View details for ${row.original.title}`}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      router.push(
+                        Routes.movieDetails({
+                          movieId: String(row.original.id),
+                        }),
+                      );
+                    }
+                  }}
                   onClick={() => {
                     router.push(
                       Routes.movieDetails({

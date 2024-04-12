@@ -17,66 +17,36 @@ import {
 } from "@/components/ui/select";
 import { Routes } from "@/lib/routes";
 import { getMovieDetails } from "@/lib/tmdb/movies";
-import { ChevronLeft } from "lucide-react";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
+import { getReadableDate, getTrailerId } from "@/lib/utils";
+import { BackButtonWithText } from "@/components/back-button-with-text";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
 };
 export default async function Page({ params }: MovieSearchPageProps) {
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
-
-  let readableDate;
-  try {
-    const date = movieDetails ? new Date(movieDetails.release_date) : "";
-    readableDate = date
-      ? new Intl.DateTimeFormat("default", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }).format(date)
-      : "";
-  } catch (e) {
-    console.error(e);
-  }
-
-  const officialTrailerId = movieDetails?.videos.results.find(
-    (video) =>
-      video.type === "Trailer" &&
-      video.site === "YouTube" &&
-      video.official === true,
-  )?.key;
-
-  const backupTrailerId = movieDetails?.videos.results.find(
-    (video) => video.type === "Trailer" && video.site === "YouTube",
-  )?.key;
+  const readableDate = getReadableDate(movieDetails?.release_date);
+  const trailerId = getTrailerId(movieDetails?.videos.results);
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       {movieDetails && (
         <div className="mx-auto grid w-full auto-rows-max gap-4">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="h-7 w-7">
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Button>
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              Movie Details:
-            </h1>
-          </div>
+          <BackButtonWithText />
           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
               <Card>
                 <CardHeader>
                   <div>
-                    <CardTitle as="h2">{movieDetails.title}</CardTitle>
-                    <h3 className="dark:text-primary">
+                    <CardTitle as="h1">{movieDetails.title}</CardTitle>
+                    <p className="dark:text-primary">
                       {
                         movieDetails.credits.crew.find(
                           (person) => person.job.toLowerCase() === "director",
                         )?.name
                       }
-                    </h3>
+                    </p>
                     <CardDescription>
                       {readableDate && `${readableDate} | `}
                       {movieDetails.runtime !== 0 && `${movieDetails.runtime}m`}
@@ -112,12 +82,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   </div>
                 </CardFooter>
               </Card>
-              {(officialTrailerId || backupTrailerId) && (
+              {trailerId && (
                 <Card>
                   <CardContent className="pt-6">
                     <iframe
                       title={`Trailer for ${movieDetails.title}`}
-                      src={`https://www.youtube.com/embed/${officialTrailerId || backupTrailerId}`}
+                      src={`https://www.youtube.com/embed/${trailerId}`}
                       allowFullScreen
                       className="aspect-video w-full"
                     />
