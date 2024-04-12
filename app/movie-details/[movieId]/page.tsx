@@ -57,7 +57,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                 <CardContent>
                   <div className="grid gap-4">
                     <div className="space-y-2">
-                      <h4>Overview:</h4>
+                      <h3>Overview:</h3>
                       <blockquote className="text-balance border-l-2 border-primary pl-6 italic">
                         {movieDetails.overview}
                       </blockquote>
@@ -151,7 +151,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                     <ImageWithDataUrl
                       alt="Product image"
                       className="aspect-movie-poster h-auto w-full rounded-md object-cover"
-                      src={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
+                      src={`https://image.tmdb.org/t/p/w342/${movieDetails.poster_path}`}
                       width={300}
                       height={444}
                       priority
