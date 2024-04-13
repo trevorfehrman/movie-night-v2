@@ -63,6 +63,7 @@ export function NavSearch() {
           if (e.key === "Enter") {
             startTransition(() => {
               setSearchTerm("");
+              setShowKeyboardShortcut(true);
               router.push(
                 Routes.searchMovies(
                   {},

@@ -30,13 +30,6 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
 
-  let shouldUseLogScale;
-  if (movieDetails?.revenue && movieDetails?.budget) {
-    shouldUseLogScale =
-      movieDetails?.revenue / movieDetails?.budget > 10 ||
-      movieDetails?.budget / movieDetails?.revenue > 10;
-  }
-
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       {movieDetails && (
@@ -168,14 +161,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
               {movieDetails.budget > 0 && movieDetails.revenue > 0 && (
                 <Card x-chunk="dashboard-07-chunk-3">
                   <CardHeader className="pb-0">
-                    <CardTitle>
-                      Budget{" "}
-                      {shouldUseLogScale && (
-                        <span className="text-base font-light">
-                          (log scale)
-                        </span>
-                      )}
-                    </CardTitle>
+                    <CardTitle>Budget </CardTitle>
                   </CardHeader>
                   <CardContent className=" h-60 w-full">
                     <BudgetChart

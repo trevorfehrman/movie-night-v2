@@ -1,5 +1,16 @@
 "use client";
-import { ResponsiveBar } from "@nivo/bar";
+import { cn } from "@/lib/utils";
+import {
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  Legend,
+  XAxis,
+  YAxis,
+  Cell,
+  // Tooltip,
+} from "recharts";
+import { TurnOffDefaultPropsWarning } from "./turn-off-default-props-warning";
 
 export function BudgetChart({
   budget,
@@ -10,56 +21,77 @@ export function BudgetChart({
 }) {
   const data = [
     {
-      id: "US Dollars",
-      country: "US Dollars",
-      Budget: budget,
-      Revenue: revenue,
-      budgetColor: "hsl(26, 70%, 50%)",
-      revenueColor: "hsl(16, 70%, 50%)",
+      name: "Budget",
+      value: budget,
+      color: "hsl(var(--primary))",
+    },
+    {
+      name: "Revenue",
+      value: revenue,
+      color: "hsl(var(--foreground))",
     },
   ];
   return (
-    <ResponsiveBar
-      data={data}
-      // valueScale={{ type: "symlog" }}
-      valueScale={{
-        type:
-          revenue / budget > 10 || budget / revenue > 10 ? "symlog" : "linear",
-      }}
-      margin={{ bottom: 10 }}
-      groupMode="grouped"
-      layout="horizontal"
-      valueFormat={(e) =>
-        new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(e)
-      }
-      keys={["Budget", "Revenue"]}
-      colors={{ scheme: "nivo" }}
-      axisLeft={null}
-      axisBottom={null}
-      isInteractive={false}
-      role="application"
-      ariaLabel="Budget chart showing the amount of money spent on budget and revenue in US Dollars."
-      barAriaLabel={(e) =>
-        e.id + ": " + e.formattedValue + " in " + e.indexValue
-      }
-      legends={[
-        {
-          dataFrom: "keys",
-          anchor: "bottom-left",
-          direction: "row",
-          itemsSpacing: 2,
-          itemWidth: 100,
-          itemHeight: 20,
-          itemDirection: "left-to-right",
-          symbolSize: 20,
-          translateY: 10,
-        },
-      ]}
-    />
+    <>
+      <TurnOffDefaultPropsWarning />
+      <ResponsiveContainer>
+        <BarChart
+          data={data}
+          layout="vertical"
+          margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+        >
+          <XAxis type="number" hide scale="linear" />
+          <YAxis type="category" hide padding={{ bottom: 0, top: 0 }} />
+          <Legend
+            align="left"
+            content={() => <CustomizedLegend data={data} />}
+          />
+          {/* <Tooltip /> */}
+          <Bar
+            dataKey="value"
+            minPointSize={100}
+            background={{ fill: "hsl(var(--secondary)" }}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </>
+  );
+}
+
+const formatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  compactDisplay: "short",
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+function CustomizedLegend({
+  data,
+}: {
+  data: { name: string; value: number; color: string }[];
+}) {
+  return (
+    <div>
+      {data.map((entry) => (
+        <div key={`cell-${entry.name}`} className="flex items-center gap-2">
+          <div
+            className={cn(
+              "size-4",
+              entry.name === "Budget" && "bg-primary",
+              entry.name === "Revenue" && "bg-foreground",
+            )}
+          />
+          <span>
+            {entry.name} — {formatter.format(entry.value)}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
