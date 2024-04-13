@@ -76,7 +76,12 @@ function Layout({ children }: { children: React.ReactNode }) {
               </SignedIn>
               <SignedOut>
                 <SignInButton>
-                  <Button size="icon" variant="outline" aria-label="Sign in">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="outline-ring"
+                    aria-label="Sign in"
+                  >
                     <User />
                   </Button>
                 </SignInButton>

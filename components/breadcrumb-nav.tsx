@@ -40,6 +40,7 @@ export function BreadcrumbNav() {
                 <BreadcrumbLink asChild>
                   <Link
                     href={`/${segmentPlusHome.slice(1, index + 1).join("/")}`}
+                    className="outline-ring"
                   >
                     {readableSegment}
                   </Link>

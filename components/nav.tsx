@@ -20,7 +20,7 @@ export function Nav() {
         <Link
           href={Routes.home()}
           className={cn(
-            "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base",
+            "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground outline-ring md:h-8 md:w-8 md:text-base",
             pathname === "/"
               ? "bg-primary"
               : "text-muted-foreground transition-colors hover:text-foreground",
@@ -35,7 +35,7 @@ export function Nav() {
             <Link
               href={Routes.searchMovies()}
               className={cn(
-                "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base",
+                "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground outline-ring md:h-8 md:w-8 md:text-base",
                 pathname === "/search-movies"
                   ? "bg-primary"
                   : "text-muted-foreground transition-colors hover:text-foreground",
@@ -53,7 +53,7 @@ export function Nav() {
           <TooltipTrigger asChild>
             <Link
               href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-ring transition-colors hover:text-foreground md:h-8 md:w-8"
             >
               <Settings className="h-5 w-5" />
               <span className="sr-only">Settings</span>

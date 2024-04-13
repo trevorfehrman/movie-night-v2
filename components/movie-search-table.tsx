@@ -150,7 +150,7 @@ export function MovieSearchTable<TData extends MovieSearchResult>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="cursor-pointer"
+                  className="cursor-pointer outline-ring focus-visible:-outline-offset-1"
                   role="button"
                   aria-label={`View details for ${row.original.title}`}
                   tabIndex={0}
