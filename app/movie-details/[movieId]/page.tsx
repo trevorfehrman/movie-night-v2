@@ -20,6 +20,7 @@ import { getMovieDetails } from "@/lib/tmdb/movies";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
 import { getReadableDate, getTrailerId } from "@/lib/utils";
 import { BackButtonWithText } from "@/components/back-button-with-text";
+import { BudgetChart } from "@/components/budget-chart";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
@@ -28,6 +29,13 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
+
+  let shouldUseLogScale;
+  if (movieDetails?.revenue && movieDetails?.budget) {
+    shouldUseLogScale =
+      movieDetails?.revenue / movieDetails?.budget > 10 ||
+      movieDetails?.budget / movieDetails?.revenue > 10;
+  }
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -57,7 +65,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                 <CardContent>
                   <div className="grid gap-4">
                     <div className="space-y-2">
-                      <h3>Overview:</h3>
+                      <h2>Overview:</h2>
                       <blockquote className="text-balance border-l-2 border-primary pl-6 italic">
                         {movieDetails.overview}
                       </blockquote>
@@ -147,40 +155,36 @@ export default async function Page({ params }: MovieSearchPageProps) {
             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
               <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
                 <CardContent className="pt-6">
-                  <div className="grid gap-4">
-                    <ImageWithDataUrl
-                      alt="Product image"
-                      className="aspect-movie-poster h-auto w-full rounded-md object-cover"
-                      src={`https://image.tmdb.org/t/p/w342/${movieDetails.poster_path}`}
-                      width={300}
-                      height={444}
-                      priority
+                  <ImageWithDataUrl
+                    alt="Product image"
+                    className="aspect-movie-poster h-auto w-full rounded-md object-cover"
+                    src={`https://image.tmdb.org/t/p/w342/${movieDetails.poster_path}`}
+                    width={300}
+                    height={444}
+                    priority
+                  />
+                </CardContent>
+              </Card>
+              {movieDetails.budget > 0 && movieDetails.revenue > 0 && (
+                <Card x-chunk="dashboard-07-chunk-3">
+                  <CardHeader className="pb-0">
+                    <CardTitle>
+                      Budget{" "}
+                      {shouldUseLogScale && (
+                        <span className="text-base font-light">
+                          (log scale)
+                        </span>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className=" h-60 w-full">
+                    <BudgetChart
+                      budget={movieDetails.budget}
+                      revenue={movieDetails.revenue}
                     />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card x-chunk="dashboard-07-chunk-3">
-                <CardHeader>
-                  <CardTitle>Product Status</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-6">
-                    <div className="grid gap-3">
-                      <Label htmlFor="status">Status</Label>
-                      <Select>
-                        <SelectTrigger id="status" aria-label="Select status">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="published">Active</SelectItem>
-                          <SelectItem value="archived">Archived</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
               <Card x-chunk="dashboard-07-chunk-5">
                 <CardHeader>
                   <CardTitle>Archive Product</CardTitle>
