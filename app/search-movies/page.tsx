@@ -11,7 +11,7 @@ import {
 import {
   MovieSearchTable,
   // movieSearchColumns,
-} from "@/components/movie-search-table";
+} from "@/components/tables/movie-search-table";
 import { Routes } from "@/lib/routes";
 import { getBase64 } from "@/lib/get-base-64";
 

@@ -176,6 +176,8 @@ const MovieDetailsSchema = z.object({
   }),
 });
 
+export type MovieDetails = z.infer<typeof MovieDetailsSchema>;
+
 export async function getMovieDetails({ movieId }: { movieId?: string }) {
   if (!movieId) {
     return;

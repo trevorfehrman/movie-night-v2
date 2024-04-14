@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,20 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Routes } from "@/lib/routes";
 import { getMovieDetails } from "@/lib/tmdb/movies";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
 import { getReadableDate, getTrailerId } from "@/lib/utils";
 import { BackButtonWithText } from "@/components/back-button-with-text";
 import { BudgetChart } from "@/components/budget-chart";
+import { Badge } from "@/components/ui/badge";
+import imdbLogo from "../../../public/imdb-logo.png";
+import { CastTable } from "@/components/tables/cast-table";
+import { getBase64 } from "@/lib/get-base-64";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CrewTable } from "@/components/tables/crew-table";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
@@ -30,12 +30,30 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
 
+  const castProfilePaths =
+    movieDetails?.credits.cast.map((castMember) => castMember.profile_path) ||
+    [];
+
+  const castProfilePathPromises = castProfilePaths.map((profilePath) =>
+    getBase64(`https://image.tmdb.org/t/p/w92/${profilePath}` || ""),
+  );
+  const castBlurDataURLs = await Promise.all(castProfilePathPromises);
+
+  const crewProfilePaths =
+    movieDetails?.credits.crew.map((crewMember) => crewMember.profile_path) ||
+    [];
+
+  const crewProfilePathPromises = crewProfilePaths.map((profilePath) =>
+    getBase64(`https://image.tmdb.org/t/p/w92/${profilePath}` || ""),
+  );
+  const crewBlurDataURLs = await Promise.all(crewProfilePathPromises);
+
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       {movieDetails && (
         <div className="mx-auto grid w-full auto-rows-max gap-4">
           <BackButtonWithText />
-          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid gap-4 lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
               <Card>
                 <CardHeader>
@@ -47,12 +65,19 @@ export default async function Page({ params }: MovieSearchPageProps) {
                           (person) => person.job.toLowerCase() === "director",
                         )?.name
                       }
+                      {movieDetails.production_countries.length > 0 &&
+                        " | " + movieDetails.production_countries[0].name}
                     </p>
                     <CardDescription>
                       {readableDate && `${readableDate} | `}
                       {movieDetails.runtime !== 0 && `${movieDetails.runtime}m`}
                     </CardDescription>
                     <CardDescription>{movieDetails.tagline}</CardDescription>
+                    <div className="mt-2 flex gap-x-2">
+                      {movieDetails.genres.map((genre) => (
+                        <Badge key={genre.id}>{genre.name}</Badge>
+                      ))}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -65,7 +90,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col justify-between gap-y-2 sm:flex-row">
                   <div className="flex gap-4">
                     {movieDetails.production_companies
                       .filter((company) => Boolean(company.logo_path))
@@ -81,6 +106,19 @@ export default async function Page({ params }: MovieSearchPageProps) {
                         </div>
                       ))}
                   </div>
+                  {movieDetails.imdb_id && (
+                    <Link
+                      className="outline-ring hover:opacity-30"
+                      href={`https://www.imdb.com/title/${movieDetails.imdb_id}`}
+                    >
+                      <Image
+                        src={imdbLogo}
+                        alt="Imdb Logo"
+                        sizes={"auto"}
+                        className="size-10 self-end grayscale dark:invert"
+                      />
+                    </Link>
+                  )}
                 </CardFooter>
               </Card>
               {trailerId && (
@@ -97,51 +135,29 @@ export default async function Page({ params }: MovieSearchPageProps) {
               )}
               <Card x-chunk="dashboard-07-chunk-2">
                 <CardHeader>
-                  <CardTitle>Product Category</CardTitle>
+                  <CardTitle>Credits</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-6 sm:grid-cols-3">
-                    <div className="grid gap-3">
-                      <Label htmlFor="category">Category</Label>
-                      <Select>
-                        <SelectTrigger
-                          id="category"
-                          aria-label="Select category"
-                        >
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="clothing">Clothing</SelectItem>
-                          <SelectItem value="electronics">
-                            Electronics
-                          </SelectItem>
-                          <SelectItem value="accessories">
-                            Accessories
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-3">
-                      <Label htmlFor="subcategory">
-                        Subcategory (optional)
-                      </Label>
-                      <Select>
-                        <SelectTrigger
-                          id="subcategory"
-                          aria-label="Select subcategory"
-                        >
-                          <SelectValue placeholder="Select subcategory" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="t-shirts">T-Shirts</SelectItem>
-                          <SelectItem value="hoodies">Hoodies</SelectItem>
-                          <SelectItem value="sweatshirts">
-                            Sweatshirts
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                  <Tabs defaultValue="cast">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="cast">Cast</TabsTrigger>
+                      <TabsTrigger value="crew">Crew</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="cast">
+                      <CastTable
+                        cast={movieDetails.credits.cast}
+                        castBlurDataURLs={castBlurDataURLs}
+                      />
+                    </TabsContent>
+                    <TabsContent value="crew">
+                      <CrewTable
+                        cast={movieDetails.credits.crew.sort(
+                          (a, b) => b.popularity - a.popularity,
+                        )}
+                        castBlurDataURLs={crewBlurDataURLs}
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
               </Card>
             </div>
@@ -149,9 +165,9 @@ export default async function Page({ params }: MovieSearchPageProps) {
               <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
                 <CardContent className="pt-6">
                   <ImageWithDataUrl
-                    alt="Product image"
+                    alt={`Poster of ${movieDetails.title}`}
                     className="aspect-movie-poster h-auto w-full rounded-md object-cover"
-                    src={`https://image.tmdb.org/t/p/w342/${movieDetails.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
                     width={300}
                     height={444}
                     priority
@@ -173,16 +189,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
               )}
               <Card x-chunk="dashboard-07-chunk-5">
                 <CardHeader>
-                  <CardTitle>Archive Product</CardTitle>
-                  <CardDescription>
-                    Lipsum dolor sit amet, consectetur adipiscing elit.
-                  </CardDescription>
+                  <CardTitle>Keywords</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div></div>
-                  <Button size="sm" variant="secondary">
-                    Archive Product
-                  </Button>
+                <CardContent className="flex flex-wrap gap-x-4 gap-y-2">
+                  {movieDetails.keywords.keywords.map((keyword) => (
+                    <span key={keyword.id}>{keyword.name}</span>
+                  ))}
                 </CardContent>
               </Card>
             </div>
