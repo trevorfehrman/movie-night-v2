@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-import { MovieDetails } from "@/lib/tmdb/movies";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -23,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableColumnHeader } from "./data-table-column-header";
+import { MovieDetails } from "@/lib/tmdb/get-movie-details";
 
 type Cast = MovieDetails["credits"]["cast"];
 type CastMember = MovieDetails["credits"]["cast"][number];

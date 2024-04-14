@@ -1,8 +1,6 @@
 "use client";
 import * as React from "react";
 
-import { MovieSearchResult } from "@/lib/tmdb/movies";
-
 import {
   ColumnDef,
   flexRender,
@@ -23,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/lib/routes";
 import { ImageWithFallback } from "../image-with-fallback";
+import { MovieSearchResult } from "@/lib/tmdb/search-movies";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.

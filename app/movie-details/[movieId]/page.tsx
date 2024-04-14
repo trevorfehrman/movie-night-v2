@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Routes } from "@/lib/routes";
-import { getMovieDetails } from "@/lib/tmdb/movies";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
 import { getReadableDate, getTrailerId } from "@/lib/utils";
 import { BackButtonWithText } from "@/components/back-button-with-text";
@@ -21,6 +20,8 @@ import { CastTable } from "@/components/tables/cast-table";
 import { getBase64 } from "@/lib/get-base-64";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CrewTable } from "@/components/tables/crew-table";
+import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
+import { ImageWithFallback } from "@/components/image-with-fallback";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
@@ -133,7 +134,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   </CardContent>
                 </Card>
               )}
-              <Card x-chunk="dashboard-07-chunk-2">
+              <Card>
                 <CardHeader>
                   <CardTitle>Credits</CardTitle>
                 </CardHeader>
@@ -162,7 +163,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
               </Card>
             </div>
             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-              <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
+              <Card className="overflow-hidden">
                 <CardContent className="pt-6">
                   <ImageWithDataUrl
                     alt={`Poster of ${movieDetails.title}`}
@@ -175,7 +176,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                 </CardContent>
               </Card>
               {movieDetails.budget > 0 && movieDetails.revenue > 0 && (
-                <Card x-chunk="dashboard-07-chunk-3">
+                <Card>
                   <CardHeader className="pb-0">
                     <CardTitle>Budget </CardTitle>
                   </CardHeader>
@@ -187,7 +188,34 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   </CardContent>
                 </Card>
               )}
-              <Card x-chunk="dashboard-07-chunk-5">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Watch Providers</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-wrap gap-x-4 gap-y-2">
+                  {movieDetails["watch/providers"].results.US.flatrate.map(
+                    (provider) => (
+                      <div
+                        key={provider.provider_id}
+                        className="relative aspect-square h-10"
+                      >
+                        <ImageWithFallback
+                          alt={`Logo for ${provider.provider_name}`}
+                          src={`https://image.tmdb.org/t/p/w92/${provider.logo_path}`}
+                          placeholder="blur"
+                          blurDataURL={
+                            "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAA7AGkDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAIDAQQG/8QAGhABAQEBAQEBAAAAAAAAAAAAAAECEhEDE//EABgBAQEBAQEAAAAAAAAAAAAAAAECAAME/8QAFxEBAQEBAAAAAAAAAAAAAAAAABEBEv/aAAwDAQACEQMRAD8A9Oys9Za8L0xlJo1pNVoqEpKa0lpgAhfRKYVZT5RlUzWK0PEpTSsIoPS+j0phOmdJ9M6aOvKl0TWi3SetmGG1pO6Lrad2YmKdDpG7HbQOiaPnTmmzzbRWY6po805Zs820VHR0Okeh0YOSdsu0Oy3a+XRa7T1tK7T19GidV1sl2jr6J36NEavdjtzfo2bMZ1TZ5tyTZ5s8qx1zZ5tyzZps8rx1dt7c3Y7bkl6LdMLVxDNaT1puktJ3BrNbTuxolCTdtmkjQ4cWmlM6QyplcUtNHmkoeGFTodFDM//Z"
+                          }
+                          sizes="auto"
+                          fill
+                          className="rounded-md object-cover"
+                        />
+                      </div>
+                    ),
+                  )}
+                </CardContent>
+              </Card>
+              <Card>
                 <CardHeader>
                   <CardTitle>Keywords</CardTitle>
                 </CardHeader>
