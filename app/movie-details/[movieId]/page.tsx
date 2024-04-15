@@ -190,7 +190,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
               )}
               <Card>
                 <CardHeader>
-                  <CardTitle>Watch Providers</CardTitle>
+                  <CardTitle>Watch Providers (Powered by JustWatch)</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-x-4 gap-y-2">
                   {movieDetails["watch/providers"].results.US.flatrate.map(
@@ -210,6 +210,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                           fill
                           className="rounded-md object-cover"
                         />
+                        {provider.provider_id}
                       </div>
                     ),
                   )}
