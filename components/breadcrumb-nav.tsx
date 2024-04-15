@@ -31,7 +31,7 @@ export function BreadcrumbNav() {
           }
 
           if (readableSegment === "/") {
-            readableSegment = "Home";
+            readableSegment = "👌 🟢 ⌛ 🖱️";
           }
 
           return (
