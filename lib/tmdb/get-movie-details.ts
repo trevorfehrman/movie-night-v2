@@ -63,10 +63,10 @@ const ProviderTypesSchema = z.object({
   results: z.object({
     US: z.object({
       link: z.string().url(),
-      buy: z.array(ProviderSchema),
-      flatrate: z.array(ProviderSchema),
-      rent: z.array(ProviderSchema),
-      ads: z.array(ProviderSchema),
+      buy: z.array(ProviderSchema).nullish(),
+      flatrate: z.array(ProviderSchema).nullish(),
+      rent: z.array(ProviderSchema).nullish(),
+      ads: z.array(ProviderSchema).nullish(),
     }),
   }),
 });
