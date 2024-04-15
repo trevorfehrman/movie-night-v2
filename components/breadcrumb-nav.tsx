@@ -10,6 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { usePathname } from "next/navigation";
+import { Check, Clock, MousePointerClick, MoveRight } from "lucide-react";
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ export function BreadcrumbNav() {
           let readableSegment = segment
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
+            .join(" ") as string | JSX.Element;
 
           const num = Number(readableSegment);
           if (!isNaN(num)) {
@@ -31,7 +32,13 @@ export function BreadcrumbNav() {
           }
 
           if (readableSegment === "/") {
-            readableSegment = "👌 🟢 ⌛ 🖱️";
+            readableSegment = (
+              <div className="flex items-center justify-center">
+                <Check className="h-4" /> <MoveRight className="h-4" />{" "}
+                <Clock className="h-4" />
+                <MousePointerClick className="h-4" />
+              </div>
+            );
           }
 
           return (
