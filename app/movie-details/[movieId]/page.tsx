@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,6 +20,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CrewTable } from "@/components/tables/crew-table";
 import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
 import { ImageWithFallback } from "@/components/image-with-fallback";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
@@ -65,7 +74,21 @@ export default async function Page({ params }: MovieSearchPageProps) {
               <Card>
                 <CardHeader>
                   <div>
-                    <CardTitle as="h1">{movieDetails.title}</CardTitle>
+                    <div className="mb-2 flex justify-between sm:m-0">
+                      <CardTitle as="h1">{movieDetails.title}</CardTitle>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="icon">
+                            <MoreHorizontal />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>Add movie</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>Add to list</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                     <p className="dark:text-primary">
                       {
                         movieDetails.credits.crew.find(
@@ -301,12 +324,6 @@ export default async function Page({ params }: MovieSearchPageProps) {
                 </CardContent>
               </Card>
             </div>
-          </div>
-          <div className="flex items-center justify-center gap-2 md:hidden">
-            <Button variant="outline" size="sm">
-              Discard
-            </Button>
-            <Button size="sm">Save Product</Button>
           </div>
         </div>
       )}
