@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { getMovieDetails } from "./tmdb/movies";
+import { getMovieDetails } from "./tmdb/get-movie-details";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
