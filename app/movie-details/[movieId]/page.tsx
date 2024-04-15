@@ -17,7 +17,6 @@ import { BudgetChart } from "@/components/budget-chart";
 import { Badge } from "@/components/ui/badge";
 import imdbLogo from "../../../public/imdb-logo.png";
 import { CastTable } from "@/components/tables/cast-table";
-import { getBase64 } from "@/lib/get-base-64";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CrewTable } from "@/components/tables/crew-table";
 import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
@@ -30,24 +29,6 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
-
-  const castProfilePaths =
-    movieDetails?.credits.cast.map((castMember) => castMember.profile_path) ||
-    [];
-
-  const castProfilePathPromises = castProfilePaths.map((profilePath) =>
-    getBase64(`https://image.tmdb.org/t/p/w92/${profilePath}` || ""),
-  );
-  const castBlurDataURLs = await Promise.all(castProfilePathPromises);
-
-  const crewProfilePaths =
-    movieDetails?.credits.crew.map((crewMember) => crewMember.profile_path) ||
-    [];
-
-  const crewProfilePathPromises = crewProfilePaths.map((profilePath) =>
-    getBase64(`https://image.tmdb.org/t/p/w92/${profilePath}` || ""),
-  );
-  const crewBlurDataURLs = await Promise.all(crewProfilePathPromises);
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -145,17 +126,13 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       <TabsTrigger value="crew">Crew</TabsTrigger>
                     </TabsList>
                     <TabsContent value="cast">
-                      <CastTable
-                        cast={movieDetails.credits.cast}
-                        castBlurDataURLs={castBlurDataURLs}
-                      />
+                      <CastTable cast={movieDetails.credits.cast} />
                     </TabsContent>
                     <TabsContent value="crew">
                       <CrewTable
                         cast={movieDetails.credits.crew.sort(
                           (a, b) => b.popularity - a.popularity,
                         )}
-                        castBlurDataURLs={crewBlurDataURLs}
                       />
                     </TabsContent>
                   </Tabs>
