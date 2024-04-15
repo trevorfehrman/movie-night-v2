@@ -1,5 +1,3 @@
-import { searchMovies } from "@/lib/tmdb/movies";
-
 import {
   Card,
   CardContent,
@@ -14,6 +12,7 @@ import {
 } from "@/components/tables/movie-search-table";
 import { Routes } from "@/lib/routes";
 import { getBase64 } from "@/lib/get-base-64";
+import { searchMovies } from "@/lib/tmdb/search-movies";
 
 type MovieSearchPageProps = {
   searchParams: typeof Routes.searchMovies.searchParams;
