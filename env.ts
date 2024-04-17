@@ -8,6 +8,7 @@ export const env = createEnv({
     TURSO_AUTH_TOKEN: z.string().min(1),
     WEBHOOK_SECRET: z.string().min(1),
     TMDB_ACCESS_TOKEN: z.string().min(1),
+    SENTRY_AUTH_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
