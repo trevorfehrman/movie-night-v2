@@ -1,5 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
+import { BackButtonWithText } from "@/components/back-button-with-text";
+import { BudgetChart } from "@/components/budget-chart";
+import { ImageWithDataUrl } from "@/components/image-with-data-url";
+import { ImageWithFallback } from "@/components/image-with-fallback";
+import { CastTable } from "@/components/tables/cast-table";
+import { CrewTable } from "@/components/tables/crew-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,19 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Routes } from "@/lib/routes";
-import { ImageWithDataUrl } from "@/components/image-with-data-url";
-import { getReadableDate, getTrailerId } from "@/lib/utils";
-import { BackButtonWithText } from "@/components/back-button-with-text";
-import { BudgetChart } from "@/components/budget-chart";
-import { Badge } from "@/components/ui/badge";
-import imdbLogo from "../../../public/imdb-logo.png";
-import { CastTable } from "@/components/tables/cast-table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CrewTable } from "@/components/tables/crew-table";
-import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
-import { ImageWithFallback } from "@/components/image-with-fallback";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +21,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Routes } from "@/lib/routes";
+import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
+import { getReadableDate, getTrailerId } from "@/lib/utils";
+import imdbLogo from "@/public/imdb-logo.png";
 import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 type MovieSearchPageProps = {
   params: typeof Routes.movieDetails.params;
