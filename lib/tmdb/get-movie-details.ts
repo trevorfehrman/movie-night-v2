@@ -72,7 +72,7 @@ const ProviderTypesSchema = z.object({
   }),
 });
 
-const MovieDetailsSchema = z.object({
+export const MovieDetailsSchema = z.object({
   adult: z.boolean(),
   backdrop_path: z.string().nullish(),
   belongs_to_collection: z.union([z.null(), z.any()]),
