@@ -1,0 +1,73 @@
+entity-relationship-diagram
+
+users [icon: user] {
+    id text pk
+    createdAt timestamp
+    email text
+    firstName text
+    lastName text
+    imgUrl text
+}
+
+movies [icon: film] {
+  id text pk
+  createdAt timestamp
+  userId text fk
+  tmdbId text
+  director text
+  directorOfPhotography text
+  year int
+  country text
+  budget int
+  revenue int
+  runtime int
+  rouzies text
+}
+
+movies.userId > users.id
+
+actors [icon: azure-users] {
+  id text pk
+  tmdbId text
+  name text
+  movieId text fk
+}
+
+movies_to_actors [icon: link] {
+  pk text pk
+  movieId text fk
+  actorId text fk
+}
+
+movies_to_actors.actorId > actors.id
+movies_to_actors.movieId > movies.id
+
+genres [icon: book] {
+  id text pk
+  name text
+  movieId text fk
+}
+
+movies_to_genres [icon: link] {
+  pk text pk
+  movieId text fk
+  genreId text fk
+}
+
+movies_to_genres.movieId > movies.id
+movies_to_genres.genreId > genres.id
+
+keywords [icon: word] {
+  id text pk
+  name text
+  movieId text fk
+}
+
+movies_to_keywords [icon: link] {
+  pk text pk
+  movieId text fk
+  keywordId text fk
+}
+
+movies_to_keywords.keywordId > keywords.id
+movies_to_keywords.movieId > movies.id
