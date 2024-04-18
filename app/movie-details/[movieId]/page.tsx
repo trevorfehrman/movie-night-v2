@@ -14,19 +14,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Routes } from "@/lib/routes";
 import { getMovieDetails } from "@/lib/tmdb/get-movie-details";
-import { getReadableDate, getTrailerId } from "@/lib/utils";
+import {
+  createCrewMap,
+  createShouldShowWatchProviders,
+  getReadableDate,
+  getTrailerId,
+} from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
-import { MoreHorizontal } from "lucide-react";
+import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -39,29 +37,11 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
 
-  let shouldShowFlatRateProviders;
-  let shouldShowRentProviders;
-  let shouldShowBuyProviders;
+  const crewMap = createCrewMap(movieDetails?.credits.crew);
 
-  if (movieDetails?.["watch/providers"].results.US.flatrate) {
-    shouldShowFlatRateProviders =
-      movieDetails["watch/providers"].results.US.flatrate.length > 0;
-  }
-
-  if (movieDetails?.["watch/providers"].results.US.rent) {
-    shouldShowRentProviders =
-      movieDetails["watch/providers"].results.US.rent.length > 0;
-  }
-
-  if (movieDetails?.["watch/providers"].results.US.buy) {
-    shouldShowBuyProviders =
-      movieDetails["watch/providers"].results.US.buy.length > 0;
-  }
-
-  const shouldShowWatchProviders =
-    shouldShowFlatRateProviders ||
-    shouldShowRentProviders ||
-    shouldShowBuyProviders;
+  const shouldShowWatchProviders = createShouldShowWatchProviders(
+    movieDetails?.["watch/providers"],
+  );
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -75,25 +55,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="icon">
-                            <MoreHorizontal />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Add movie</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>Add to list</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button variant="outline" size="icon">
+                        <Plus />
+                      </Button>
                     </div>
                     <p className="dark:text-primary">
-                      {
-                        movieDetails.credits.crew.find(
-                          (person) => person.job.toLowerCase() === "director",
-                        )?.name
-                      }
+                      {crewMap?.director}
                       {movieDetails.production_countries.length > 0 &&
                         " | " + movieDetails.production_countries[0].name}
                     </p>
@@ -176,11 +143,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       <CastTable cast={movieDetails.credits.cast} />
                     </TabsContent>
                     <TabsContent value="crew">
-                      <CrewTable
-                        cast={movieDetails.credits.crew.sort(
-                          (a, b) => b.popularity - a.popularity,
-                        )}
-                      />
+                      <CrewTable cast={movieDetails.credits.crew} />
                     </TabsContent>
                   </Tabs>
                 </CardContent>

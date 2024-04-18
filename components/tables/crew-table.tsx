@@ -59,9 +59,9 @@ export function CrewTable({ cast }: { cast: Cast }) {
           <DataTableColumnHeader column={column} title="Name" />
         ),
       }),
-      castColumnHelper.accessor("department", {
+      castColumnHelper.accessor("job", {
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Department" />
+          <DataTableColumnHeader column={column} title="Title" />
         ),
       }),
       castColumnHelper.accessor("popularity", {
