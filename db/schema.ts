@@ -92,8 +92,8 @@ export const moviesToActors = sqliteTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.movieId, table.actorId] }),
-    movieIdIndex: index("movie_id_index").on(table.movieId),
-    actorIdIndex: index("actor_id_index").on(table.actorId),
+    movieIdIndex: index("movies_actors_movie_id_index").on(table.movieId),
+    actorIdIndex: index("movies_actors_actor_id_index").on(table.actorId),
   }),
 );
 
@@ -138,8 +138,8 @@ export const moviesToGenres = sqliteTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.movieId, table.genreId] }),
-    movieIdIndex: index("movie_id_index").on(table.movieId),
-    genreIdIndex: index("genre_id_index").on(table.genreId),
+    movieIdIndex: index("movies_genres_movie_id_index").on(table.movieId),
+    genreIdIndex: index("movies_genres_genre_id_index").on(table.genreId),
   }),
 );
 
@@ -184,8 +184,10 @@ export const moviesToKeywords = sqliteTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.movieId, table.keywordId] }),
-    movieIdIndex: index("movie_id_index").on(table.movieId),
-    keywordIdIndex: index("genre_id_index").on(table.keywordId),
+    movieIdIndex: index("movies_keywords_movie_id_index").on(table.movieId),
+    keywordIdIndex: index("movies_keywords_keyword_id_index").on(
+      table.keywordId,
+    ),
   }),
 );
 
