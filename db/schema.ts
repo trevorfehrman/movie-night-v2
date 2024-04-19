@@ -46,6 +46,7 @@ export const movies = sqliteTable(
     directorOfPhotographyIndex: index("director_of_photography_index").on(
       table.directorOfPhotography,
     ),
+    titleIndex: index("title_index").on(table.title),
     yearIndex: index("year_index").on(table.year),
     countryIndex: index("country_index").on(table.country),
   }),
@@ -57,8 +58,8 @@ export const moviesRelations = relations(movies, ({ one, many }) => ({
     references: [users.id],
   }),
   actors: many(moviesToActors),
-  // genres: many(moviesToGenres),
-  // keywords: many(moviesToKeywords),
+  genres: many(moviesToGenres),
+  keywords: many(moviesToKeywords),
   // writers: many(moviesToWriters),
 }));
 
@@ -70,7 +71,7 @@ export const actors = sqliteTable(
     name: text("name").notNull().unique(),
   },
   (table) => ({
-    nameIndex: index("name_index").on(table.name),
+    actorsNameIndex: index("actors_name_index").on(table.name),
   }),
 );
 
@@ -108,97 +109,85 @@ export const moviesToActorsRelations = relations(moviesToActors, ({ one }) => ({
   }),
 }));
 
-// export const genres = sqliteTable(
-//   "genres",
-//   {
-//     id: text("id")
-//       .primaryKey()
-//       .$defaultFn(() => createId()),
-//     createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
-//     name: text("name").notNull().unique(),
-//     movieId: text("movie_id")
-//       .notNull()
-//       .references(() => movies.id),
-//   },
-//   (table) => ({
-//     nameIndex: index("name_index").on(table.name),
-//     movieIdIndex: index("movie_id_index").on(table.movieId),
-//   }),
-// );
+export const genres = sqliteTable(
+  "genres",
+  {
+    id: text("id").primaryKey(),
+    createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
+    name: text("name").notNull().unique(),
+  },
+  (table) => ({
+    genresNameIndex: index("genres_name_index").on(table.name),
+  }),
+);
 
-// export const genresRelations = relations(genres, ({ many }) => ({
-//   movies: many(moviesToGenres),
-// }));
+export const genresRelations = relations(genres, ({ many }) => ({
+  movies: many(moviesToGenres),
+}));
 
-// export const moviesToGenres = sqliteTable(
-//   "movies_to_genres",
-//   {
-//     movieId: text("movie_id")
-//       .notNull()
-//       .references(() => movies.id, { onDelete: "cascade" }),
-//     genreId: text("genre_id")
-//       .notNull()
-//       .references(() => genres.id, { onDelete: "cascade" }),
-//     createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
-//   },
-//   (table) => ({
-//     pk: primaryKey({ columns: [table.movieId, table.genreId] }),
-//     movieIdIndex: index("movie_id_index").on(table.movieId),
-//     genreIdIndex: index("genre_id_index").on(table.genreId),
-//   }),
-// );
+export const moviesToGenres = sqliteTable(
+  "movies_to_genres",
+  {
+    movieId: text("movie_id")
+      .notNull()
+      .references(() => movies.id, { onDelete: "cascade" }),
+    genreId: text("genre_id")
+      .notNull()
+      .references(() => genres.id, { onDelete: "cascade" }),
+    createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.movieId, table.genreId] }),
+    movieIdIndex: index("movie_id_index").on(table.movieId),
+    genreIdIndex: index("genre_id_index").on(table.genreId),
+  }),
+);
 
-// export const moviesToGenresRelations = relations(moviesToGenres, ({ one }) => ({
-//   movie: one(movies, {
-//     fields: [moviesToGenres.movieId],
-//     references: [movies.id],
-//   }),
+export const moviesToGenresRelations = relations(moviesToGenres, ({ one }) => ({
+  movie: one(movies, {
+    fields: [moviesToGenres.movieId],
+    references: [movies.id],
+  }),
 
-//   genre: one(genres, {
-//     fields: [moviesToGenres.genreId],
-//     references: [genres.id],
-//   }),
-// }));
+  genre: one(genres, {
+    fields: [moviesToGenres.genreId],
+    references: [genres.id],
+  }),
+}));
 
-// export const keywords = sqliteTable(
-//   "keywords",
-//   {
-//     id: text("id")
-//       .primaryKey()
-//       .$defaultFn(() => createId()),
-//     createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
-//     name: text("name").notNull().unique(),
-//     movieId: text("movie_id")
-//       .notNull()
-//       .references(() => movies.id),
-//   },
-//   (table) => ({
-//     nameIndex: index("name_index").on(table.name),
-//     movieIdIndex: index("movie_id_index").on(table.movieId),
-//   }),
-// );
+export const keywords = sqliteTable(
+  "keywords",
+  {
+    id: text("id").primaryKey(),
+    createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
+    name: text("name").notNull().unique(),
+  },
+  (table) => ({
+    keywordsNameIndex: index("keywords_name_index").on(table.name),
+  }),
+);
 
-// export const keyWordsRelations = relations(keywords, ({ many }) => ({
-//   movies: many(moviesToKeywords),
-// }));
+export const keyWordsRelations = relations(keywords, ({ many }) => ({
+  movies: many(moviesToKeywords),
+}));
 
-// export const moviesToKeywords = sqliteTable(
-//   "movies_to_keywords",
-//   {
-//     movieId: text("movie_id")
-//       .notNull()
-//       .references(() => movies.id, { onDelete: "cascade" }),
-//     keywordId: text("keywords_id")
-//       .notNull()
-//       .references(() => keywords.id, { onDelete: "cascade" }),
-//     createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
-//   },
-//   (table) => ({
-//     pk: primaryKey({ columns: [table.movieId, table.keywordId] }),
-//     movieIdIndex: index("movie_id_index").on(table.movieId),
-//     keywordIdIndex: index("genre_id_index").on(table.keywordId),
-//   }),
-// );
+export const moviesToKeywords = sqliteTable(
+  "movies_to_keywords",
+  {
+    movieId: text("movie_id")
+      .notNull()
+      .references(() => movies.id, { onDelete: "cascade" }),
+    keywordId: text("keywords_id")
+      .notNull()
+      .references(() => keywords.id, { onDelete: "cascade" }),
+    createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.movieId, table.keywordId] }),
+    movieIdIndex: index("movie_id_index").on(table.movieId),
+    keywordIdIndex: index("genre_id_index").on(table.keywordId),
+  }),
+);
 
 // export const moviesToKeywordsRelations = relations(
 //   moviesToKeywords,
