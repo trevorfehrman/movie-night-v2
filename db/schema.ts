@@ -6,7 +6,6 @@ import {
   index,
   primaryKey,
 } from "drizzle-orm/sqlite-core";
-import { createId } from "@paralleldrive/cuid2";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -24,14 +23,12 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const movies = sqliteTable(
   "movies",
   {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => createId()),
+    id: text("id").primaryKey(),
     createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`),
     userId: text("user")
       .notNull()
       .references(() => users.id),
-    tmdbId: int("tmdb_id").notNull().unique(),
+    title: text("title").notNull(),
     director: text("director").notNull(),
     directorOfPhotography: text("director_of_photography"),
     composer: text("composer"),
@@ -68,19 +65,12 @@ export const moviesRelations = relations(movies, ({ one, many }) => ({
 export const actors = sqliteTable(
   "actors",
   {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => createId()),
+    id: text("id").primaryKey(),
     createdAt: text("createdAt").default(sql`(CURRENT_TIMESTAMP)`),
-    tmdbId: int("tmdb_id").notNull().unique(),
     name: text("name").notNull().unique(),
-    movieId: text("movie_id")
-      .notNull()
-      .references(() => movies.id),
   },
   (table) => ({
     nameIndex: index("name_index").on(table.name),
-    tmdbIdIndex: index("tmdb_id_index").on(table.tmdbId),
   }),
 );
 

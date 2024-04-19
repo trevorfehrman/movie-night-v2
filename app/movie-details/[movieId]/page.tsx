@@ -1,3 +1,4 @@
+// import { AddMovieButton } from "@/components/add-movie-button";
 import { BackButtonWithText } from "@/components/back-button-with-text";
 import { BudgetChart } from "@/components/budget-chart";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
@@ -5,7 +6,6 @@ import { ImageWithFallback } from "@/components/image-with-fallback";
 import { CastTable } from "@/components/tables/cast-table";
 import { CrewTable } from "@/components/tables/crew-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -24,7 +24,7 @@ import {
   getTrailerId,
 } from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
-import { Plus } from "lucide-react";
+// import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,6 +33,8 @@ type MovieSearchPageProps = {
 };
 
 export default async function Page({ params }: MovieSearchPageProps) {
+  // const { userId } = auth();
+
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
   const trailerId = getTrailerId(movieDetails?.videos.results);
@@ -55,9 +57,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      <Button variant="outline" size="icon">
-                        <Plus />
-                      </Button>
+                      {/* {userId && (
+                        <AddMovieButton
+                          movieDetails={movieDetails}
+                          userId={userId}
+                        />
+                      )} */}
                     </div>
                     <p className="dark:text-primary">
                       {crewMap?.director}
