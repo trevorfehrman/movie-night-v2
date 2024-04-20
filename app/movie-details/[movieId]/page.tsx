@@ -248,7 +248,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       </div>
                     )}
 
-                    {movieDetails["watch/providers"].results.US.buy && (
+                    {movieDetails["watch/providers"].results.US?.buy && (
                       <div>
                         <p className="mb-2">Buy</p>
                         <div className="flex flex-wrap gap-2">
