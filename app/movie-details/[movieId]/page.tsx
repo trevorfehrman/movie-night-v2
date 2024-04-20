@@ -24,7 +24,7 @@ import {
   getTrailerId,
 } from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,6 +34,7 @@ type MovieSearchPageProps = {
 
 export default async function Page({ params }: MovieSearchPageProps) {
   const { userId } = auth();
+  const user = await currentUser();
 
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
@@ -57,12 +58,13 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      {userId && (
-                        <AddMovieButton
-                          movieDetails={movieDetails}
-                          userId={userId}
-                        />
-                      )}
+                      {userId &&
+                        userId === "user_2fL7646NUZehIlBBu9bXtWYp5Co" && (
+                          <AddMovieButton
+                            movieDetails={movieDetails}
+                            userId={userId}
+                          />
+                        )}
                     </div>
                     <p className="dark:text-primary">
                       {crewMap?.director?.name}
@@ -78,6 +80,10 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       {movieDetails.genres.map((genre) => (
                         <Badge key={genre.id}>{genre.name}</Badge>
                       ))}
+                    </div>
+                    <div>
+                      hihihihihihi
+                      {userId}
                     </div>
                   </div>
                 </CardHeader>
