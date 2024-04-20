@@ -30,6 +30,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
   if (isNaN(year)) {
     throw new Error("Invalid year");
   }
+  const posterPath = movieDetails.poster_path ?? "";
   const title = movieDetails.title;
   const country = movieDetails.production_countries[0].iso_3166_1;
   const budget = movieDetails.budget;
@@ -45,6 +46,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
       .values({
         id: String(tmdbId),
         userId,
+        posterPath,
         title,
         director,
         year,

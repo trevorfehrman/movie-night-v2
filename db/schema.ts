@@ -28,6 +28,7 @@ export const movies = sqliteTable(
     userId: text("user_id")
       .notNull()
       .references(() => users.id),
+    posterPath: text("poster_path").notNull(),
     title: text("title").notNull(),
     director: text("director").notNull(),
     directorOfPhotography: text("director_of_photography"),

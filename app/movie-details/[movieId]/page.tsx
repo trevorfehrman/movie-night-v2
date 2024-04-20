@@ -1,4 +1,4 @@
-// import { AddMovieButton } from "@/components/add-movie-button";
+import { AddMovieButton } from "@/components/add-movie-button";
 import { BackButtonWithText } from "@/components/back-button-with-text";
 import { BudgetChart } from "@/components/budget-chart";
 import { ImageWithDataUrl } from "@/components/image-with-data-url";
@@ -24,7 +24,7 @@ import {
   getTrailerId,
 } from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
-// import { auth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ type MovieSearchPageProps = {
 };
 
 export default async function Page({ params }: MovieSearchPageProps) {
-  // const { userId } = auth();
+  const { userId } = auth();
 
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
@@ -57,12 +57,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      {/* {userId && (
+                      {userId && (
                         <AddMovieButton
                           movieDetails={movieDetails}
                           userId={userId}
                         />
-                      )} */}
+                      )}
                     </div>
                     <p className="dark:text-primary">
                       {crewMap?.director?.name}
