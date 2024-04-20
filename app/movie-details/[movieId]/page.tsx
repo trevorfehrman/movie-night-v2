@@ -50,9 +50,6 @@ export default async function Page({ params }: MovieSearchPageProps) {
       {movieDetails && (
         <div className="mx-auto grid w-full auto-rows-max gap-4">
           <BackButtonWithText />
-          {crewMap?.writers.map((writer) => (
-            <div key={writer.id}>{writer.name}</div>
-          ))}
           <div className="grid gap-4 lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
               <Card>
@@ -60,12 +57,12 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      {userId && (
+                      {/* {userId && (
                         <AddMovieButton
                           movieDetails={movieDetails}
                           userId={userId}
                         />
-                      )}
+                      )} */}
                     </div>
                     <p className="dark:text-primary">
                       {crewMap?.director?.name}
