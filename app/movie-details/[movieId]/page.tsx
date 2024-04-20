@@ -191,7 +191,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-col gap-4">
-                    {movieDetails["watch/providers"].results.US.flatrate && (
+                    {movieDetails["watch/providers"].results.US?.flatrate && (
                       <div>
                         <p className="mb-2">Streaming</p>
                         <div className="flex flex-wrap gap-2">
@@ -219,7 +219,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                         </div>
                       </div>
                     )}
-                    {movieDetails["watch/providers"].results.US.rent && (
+                    {movieDetails["watch/providers"].results.US?.rent && (
                       <div>
                         <p className="mb-2">Rent</p>
                         <div className="flex flex-wrap gap-2">

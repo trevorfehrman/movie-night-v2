@@ -6,6 +6,7 @@ import { MovieDetails, MovieDetailsSchema } from "../tmdb/get-movie-details";
 import { action } from "./safe-action";
 import { z } from "zod";
 import { createCrewMap } from "../utils";
+import { revalidatePath } from "next/cache";
 
 export const safeAddMovie = action(
   MovieDetailsSchema.merge(z.object({ userId: z.string() })),
@@ -73,11 +74,13 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     }));
 
     // Insert actors and moviesToActors
-    await tx.insert(schema.actors).values(cast).onConflictDoNothing();
-    await tx
-      .insert(schema.moviesToActors)
-      .values(moviesActors)
-      .onConflictDoNothing();
+    if (cast.length > 0) {
+      await tx.insert(schema.actors).values(cast).onConflictDoNothing();
+      await tx
+        .insert(schema.moviesToActors)
+        .values(moviesActors)
+        .onConflictDoNothing();
+    }
 
     // Prepare genres and moviesToGenres
     const genres = movieDetails.genres.map((genre) => ({
@@ -91,11 +94,13 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     }));
 
     // Insert genres and moviesToGenres
-    await tx.insert(schema.genres).values(genres).onConflictDoNothing();
-    await tx
-      .insert(schema.moviesToGenres)
-      .values(moviesGenres)
-      .onConflictDoNothing();
+    if (genres.length > 0) {
+      await tx.insert(schema.genres).values(genres).onConflictDoNothing();
+      await tx
+        .insert(schema.moviesToGenres)
+        .values(moviesGenres)
+        .onConflictDoNothing();
+    }
 
     // Prepare keywords and moviesToKeywords
     const keywords = movieDetails.keywords.keywords.map((keyword) => ({
@@ -109,11 +114,13 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     }));
 
     // Insert keywords and moviesToKeywords
-    await tx.insert(schema.keywords).values(keywords).onConflictDoNothing();
-    await tx
-      .insert(schema.moviesToKeywords)
-      .values(moviesKeywords)
-      .onConflictDoNothing();
+    if (keywords.length > 0) {
+      await tx.insert(schema.keywords).values(keywords).onConflictDoNothing();
+      await tx
+        .insert(schema.moviesToKeywords)
+        .values(moviesKeywords)
+        .onConflictDoNothing();
+    }
 
     // Prepare writers and moviesToWriters
     const writers = crewMap.writers.map((writer) => ({
@@ -127,31 +134,16 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     }));
 
     // Insert writers and moviesToWriters
-    await tx.insert(schema.writers).values(writers).onConflictDoNothing();
-    await tx
-      .insert(schema.moviesToWriters)
-      .values(moviesWriters)
-      .onConflictDoNothing();
+    if (writers.length > 0) {
+      await tx.insert(schema.writers).values(writers).onConflictDoNothing();
+      await tx
+        .insert(schema.moviesToWriters)
+        .values(moviesWriters)
+        .onConflictDoNothing();
+    }
+
+    revalidatePath("/");
 
     return movieId;
   });
 }
-
-//   const writerInsert = await tx
-//     .insert(schema.writers)
-//     .values([
-//       { id: "1", name: "mystery", movieId, tmdbId: 1 },
-//       { id: "1", name: "mystery", movieId, tmdbId: 1 },
-//     ])
-//     .onConflictDoNothing()
-//     .returning({ writerId: schema.writers.id });
-
-//   writerInsert.forEach(async (writer) => {
-//     await tx
-//       .insert(schema.moviesToWriters)
-//       .values({ movieId, writerId: writer.writerId })
-//       .onConflictDoNothing();
-//   });
-
-//   return movieId;
-// });

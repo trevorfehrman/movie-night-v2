@@ -101,15 +101,15 @@ export function createShouldShowWatchProviders(
   let shouldShowRentProviders;
   let shouldShowBuyProviders;
 
-  if (watchProviders.results.US.flatrate) {
+  if (watchProviders.results.US?.flatrate) {
     shouldShowFlatRateProviders = watchProviders.results.US.flatrate.length > 0;
   }
 
-  if (watchProviders.results.US.rent) {
+  if (watchProviders.results.US?.rent) {
     shouldShowRentProviders = watchProviders.results.US.rent.length > 0;
   }
 
-  if (watchProviders.results.US.buy) {
+  if (watchProviders.results.US?.buy) {
     shouldShowBuyProviders = watchProviders.results.US.buy.length > 0;
   }
 
