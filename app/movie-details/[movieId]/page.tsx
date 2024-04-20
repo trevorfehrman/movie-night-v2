@@ -24,7 +24,7 @@ import {
   getTrailerId,
 } from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,7 +34,6 @@ type MovieSearchPageProps = {
 
 export default async function Page({ params }: MovieSearchPageProps) {
   const { userId } = auth();
-  const user = await currentUser();
 
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date);
