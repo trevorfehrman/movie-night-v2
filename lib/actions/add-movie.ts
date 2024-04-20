@@ -19,7 +19,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
   let director;
 
   if (crewMap?.director) {
-    director = crewMap.director;
+    director = crewMap.director.name;
   } else {
     throw new Error("No director found");
   }
@@ -34,8 +34,8 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
   const budget = movieDetails.budget;
   const revenue = movieDetails.revenue;
   const runtime = movieDetails.runtime;
-  const composer = crewMap.composer;
-  const directorOfPhotography = crewMap.directorOfPhotography;
+  const composer = crewMap.composer?.name;
+  const directorOfPhotography = crewMap.directorOfPhotography?.name;
 
   await db.transaction(async (tx) => {
     // Insert movie
@@ -69,7 +69,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
 
     const moviesActors = cast.map((actor) => ({
       movieId,
-      actorId: String(actor.id),
+      actorId: actor.id,
     }));
 
     // Insert actors and moviesToActors
@@ -87,7 +87,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
 
     const moviesGenres = genres.map((genre) => ({
       movieId,
-      genreId: String(genre.id),
+      genreId: genre.id,
     }));
 
     // Insert genres and moviesToGenres
@@ -105,7 +105,7 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
 
     const moviesKeywords = keywords.map((keyword) => ({
       movieId,
-      keywordId: String(keyword.id),
+      keywordId: keyword.id,
     }));
 
     // Insert keywords and moviesToKeywords
@@ -113,6 +113,24 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     await tx
       .insert(schema.moviesToKeywords)
       .values(moviesKeywords)
+      .onConflictDoNothing();
+
+    // Prepare writers and moviesToWriters
+    const writers = crewMap.writers.map((writer) => ({
+      id: String(writer.id),
+      name: writer.name,
+    }));
+
+    const moviesWriters = writers.map((writer) => ({
+      movieId,
+      writerId: writer.id,
+    }));
+
+    // Insert writers and moviesToWriters
+    await tx.insert(schema.writers).values(writers).onConflictDoNothing();
+    await tx
+      .insert(schema.moviesToWriters)
+      .values(moviesWriters)
       .onConflictDoNothing();
 
     return movieId;

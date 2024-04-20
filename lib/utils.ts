@@ -48,13 +48,15 @@ export function getTrailerId(videos?: Videos) {
   return undefined;
 }
 
+type CrewMember = MovieDetails["credits"]["crew"][number];
+
 type CrewMap = {
-  director?: string;
-  directorOfPhotography?: string;
-  editors: string[];
-  writers: string[];
-  producers: string[];
-  composer?: string;
+  director?: CrewMember;
+  directorOfPhotography?: CrewMember;
+  editors: CrewMember[];
+  writers: CrewMember[];
+  producers: CrewMember[];
+  composer?: CrewMember;
 };
 
 export function createCrewMap(crew?: MovieDetails["credits"]["crew"]) {
@@ -63,30 +65,30 @@ export function createCrewMap(crew?: MovieDetails["credits"]["crew"]) {
   return crew.reduce(
     (acc, person) => {
       if (person.job.toLowerCase() === "director") {
-        acc.director = person.name;
+        acc.director = person;
       } else if (person.job.toLowerCase() === "director of photography") {
-        acc.directorOfPhotography = person.name;
+        acc.directorOfPhotography = person;
       } else if (person.job.toLowerCase() === "editor") {
-        acc.editors.push(person.name);
+        acc.editors.push(person);
       } else if (
         person.job.toLowerCase() === "writer" ||
         person.job.toLowerCase() === "screenplay"
       ) {
-        acc.writers.push(person.name);
+        acc.writers.push(person);
       } else if (person.job.toLowerCase() === "producer") {
-        acc.producers.push(person.name);
+        acc.producers.push(person);
       } else if (person.job.toLowerCase() === "original music composer") {
-        acc.composer = person.name;
+        acc.composer = person;
       }
       return acc;
     },
     {
-      director: "",
-      directorOfPhotography: "",
+      director: undefined,
+      directorOfPhotography: undefined,
       editors: [],
       writers: [],
       producers: [],
-      composer: "",
+      composer: undefined,
     } as CrewMap,
   );
 }
