@@ -4,6 +4,7 @@ import { useAction } from "next-safe-action/hooks";
 import { Button } from "./ui/button";
 import { safeAddMovie } from "@/lib/actions/add-movie";
 import { MovieDetails } from "@/lib/tmdb/get-movie-details";
+import { useOrganization } from "@clerk/nextjs";
 
 export function AddMovieButton({
   movieDetails,
@@ -13,7 +14,8 @@ export function AddMovieButton({
   userId: string;
 }) {
   const { execute, result, status } = useAction(safeAddMovie);
-  // const { execute, status } = useAction(safeAddMovie);
+  const thing = useOrganization();
+  console.log(thing);
   return (
     <>
       <Button

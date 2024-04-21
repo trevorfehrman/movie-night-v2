@@ -24,6 +24,7 @@ import {
   getTrailerId,
 } from "@/lib/utils";
 import imdbLogo from "@/public/imdb-logo.png";
+import { Protect } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,13 +58,14 @@ export default async function Page({ params }: MovieSearchPageProps) {
                   <div>
                     <div className="mb-2 flex justify-between sm:m-0">
                       <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      {userId &&
-                        userId === "user_2fL7646NUZehIlBBu9bXtWYp5Co" && (
+                      <Protect permission="org:movie:create">
+                        {userId && (
                           <AddMovieButton
                             movieDetails={movieDetails}
                             userId={userId}
                           />
                         )}
+                      </Protect>
                     </div>
                     <p className="dark:text-primary">
                       {crewMap?.director?.name}
@@ -79,10 +81,6 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       {movieDetails.genres.map((genre) => (
                         <Badge key={genre.id}>{genre.name}</Badge>
                       ))}
-                    </div>
-                    <div>
-                      hihihihihihi
-                      {userId}
                     </div>
                   </div>
                 </CardHeader>

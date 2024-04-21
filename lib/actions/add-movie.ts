@@ -7,6 +7,7 @@ import { action } from "./safe-action";
 import { z } from "zod";
 import { createCrewMap } from "../utils";
 import { revalidatePath } from "next/cache";
+import { auth } from "@clerk/nextjs/server";
 
 export const safeAddMovie = action(
   MovieDetailsSchema.merge(z.object({ userId: z.string() })),
@@ -14,6 +15,12 @@ export const safeAddMovie = action(
 );
 
 async function addMovie(movieDetails: MovieDetails & { userId: string }) {
+  const { userId: clerkUserId, orgId, has } = auth();
+
+  if (!clerkUserId || !orgId || !has({ permission: "org:movie:create" })) {
+    return;
+  }
+
   const crewMap = createCrewMap(movieDetails.credits.crew);
   const { userId, id: tmdbId } = movieDetails;
 
