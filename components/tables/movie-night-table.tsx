@@ -75,16 +75,6 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           <DataTableColumnHeader column={column} title="Director" />
         ),
       }),
-      movieNightColumnHelper.accessor("country", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Country" />
-        ),
-      }),
-      movieNightColumnHelper.accessor("year", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Year" />
-        ),
-      }),
       movieNightColumnHelper.accessor("user.firstName", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Picked By" />
