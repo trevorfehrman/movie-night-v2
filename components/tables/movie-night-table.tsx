@@ -24,6 +24,7 @@ import {
 } from "../ui/table";
 import Link from "next/link";
 import { planescapeDataURL } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 type Movie = Awaited<ReturnType<typeof db.query.movies.findMany>>[number];
 type MovieWithUserName = Movie & {
@@ -97,6 +98,9 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  const shownColumns = ["rouzies", "posterPath", "title", "director"];
+  const shownColumnsSm = ["title", "user_firstName"];
+
   return (
     <>
       <div className="flex items-center py-4">
@@ -113,7 +117,13 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           {movieNightTable.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  className={cn("hidden", {
+                    "md:table-cell": shownColumns.includes(header.column.id),
+                    "table-cell": shownColumnsSm.includes(header.column.id),
+                  })}
+                >
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -127,7 +137,18 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           {movieNightTable.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+                <TableCell
+                  key={cell.id}
+                  className={
+                    cn("hidden", {
+                      "md:table-cell": shownColumns.includes(cell.column.id),
+                      "table-cell": shownColumnsSm.includes(cell.column.id),
+                    })
+
+                    // hiddenColumns.includes(cell.column.id) && "hidden",
+                    // "md:table-cell",
+                  }
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
