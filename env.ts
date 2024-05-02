@@ -11,6 +11,12 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: z.string().min(1),
     PUSHER_APP_ID: z.string().min(1),
     PUSHER_SECRET: z.string().min(1),
+    UPSTASH_KAFKA_REST_URL: z.string().min(1),
+    UPSTASH_KAFKA_REST_USERNAME: z.string().min(1),
+    UPSTASH_KAFKA_REST_PASSWORD: z.string().min(1),
+    UPSTASH_REDIS_URL: z.string().min(1),
+    UPSTASH_REDIS_REST_URL: z.string().min(1),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),

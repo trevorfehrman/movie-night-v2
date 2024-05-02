@@ -6,17 +6,35 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getReadableDate(release_date?: string) {
-  if (!release_date) return;
+export function getReadableDate(date: string) {
+  if (!date) return;
 
   try {
-    const date = new Date(release_date);
+    const dateObj = new Date(date);
     return date
-      ? new Intl.DateTimeFormat("default", {
+      ? new Intl.DateTimeFormat("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric",
-        }).format(date)
+        }).format(dateObj)
+      : "";
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export function getReadableDateTime(date: string) {
+  try {
+    const dateObj = new Date(date);
+    return date
+      ? new Intl.DateTimeFormat("en-US", {
+          // year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false, // Use 24-hour time without AM/PM
+        }).format(dateObj)
       : "";
   } catch (e) {
     console.error(e);

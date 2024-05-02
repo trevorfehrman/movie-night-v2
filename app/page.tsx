@@ -1,5 +1,6 @@
+import { ChatBox } from "@/components/chat-box";
+import { ChatInput } from "@/components/chat-input";
 import { ImageWithFallback } from "@/components/image-with-fallback";
-import { MessageList } from "@/components/message-list";
 import { MovieNightTable } from "@/components/tables/movie-night-table";
 import {
   Card,
@@ -10,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/db";
+import { redis } from "@/lib/redis/client";
+import { ChatMessagesSchema } from "@/lib/schemas/chat";
 
 export default async function Home() {
   const users = await db.query.users.findMany();
@@ -24,28 +27,22 @@ export default async function Home() {
     },
   });
 
+  const posts = await redis.lrange("posts", -50, -1);
+
+  const validatedPosts = ChatMessagesSchema.parse(posts);
+
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <Card>
-          <CardHeader className="flex flex-row items-start bg-muted/50">
-            <div className="grid gap-0.5">
-              <CardTitle className="group flex items-center gap-2 text-lg">
-                I should say something there
-              </CardTitle>
-              <CardDescription>But what???</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <MovieNightTable movies={movies} />
-          </CardContent>
+          <MovieNightTable movies={movies} />
         </Card>
       </div>
       <div className="flex flex-col gap-y-4">
         <Card className="overflow-hidden">
           <CardHeader className="flex flex-row items-start bg-muted/50">
             <div className="grid gap-0.5">
-              <CardTitle className="group flex items-center gap-2 text-lg">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 Whose turn is it
               </CardTitle>
               <CardDescription>
@@ -58,7 +55,7 @@ export default async function Home() {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-y-4 p-6 text-sm">
-            {[...users, ...users, ...users].map((user) => (
+            {users.map((user) => (
               <div
                 className="flex items-center gap-x-2"
                 key={String(Math.random())}
@@ -74,24 +71,27 @@ export default async function Home() {
               </div>
             ))}
           </CardContent>
-          <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+          <CardFooter className="flex items-center border-t bg-muted/50 px-6 py-3">
             <div className="text-xs text-muted-foreground">
               Updated <time dateTime="2023-11-23">November 23, 2023</time>
             </div>
           </CardFooter>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>This Week</CardDescription>
-            <CardTitle className="text-4xl">$1,329</CardTitle>
+        <Card className="relative">
+          <CardHeader className="flex flex-row items-start bg-muted/50">
+            <div className="grid gap-0.5">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                Chat
+              </CardTitle>
+              <CardDescription>Say something</CardDescription>
+            </div>
           </CardHeader>
-          <CardContent>
-            {/* <div className="text-xs text-muted-foreground">
-              +25% from last week
-            </div> */}
-            <MessageList prop="hi" />
+          <CardContent className="p-0">
+            <ChatBox posts={validatedPosts} />
           </CardContent>
-          <CardFooter></CardFooter>
+          <CardFooter className="flex items-center gap-4 border-t bg-muted/50 px-6 py-3">
+            <ChatInput />
+          </CardFooter>
         </Card>
         <Card>
           <CardHeader className="pb-2">

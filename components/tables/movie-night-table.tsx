@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { planescapeDataURL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 type Movie = Awaited<ReturnType<typeof db.query.movies.findMany>>[number];
 type MovieWithUserName = Movie & {
@@ -103,7 +104,10 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
 
   return (
     <>
-      <div className="flex items-center py-4">
+      <CardHeader className="flex items-center  justify-between bg-muted/50 md:flex-row">
+        <div>
+          <CardTitle>Random quote</CardTitle>
+        </div>
         <Input
           placeholder="Filter..."
           onChange={(event) =>
@@ -111,52 +115,56 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           }
           className="max-w-xs"
         />
-      </div>
-      <Table>
-        <TableHeader>
-          {movieNightTable.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  className={cn("hidden", {
-                    "md:table-cell": shownColumns.includes(header.column.id),
-                    "table-cell": shownColumnsSm.includes(header.column.id),
-                  })}
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {movieNightTable.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell
-                  key={cell.id}
-                  className={
-                    cn("hidden", {
-                      "md:table-cell": shownColumns.includes(cell.column.id),
-                      "table-cell": shownColumnsSm.includes(cell.column.id),
-                    })
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            {movieNightTable.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="hover:bg-inherit">
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className={cn("hidden", {
+                      "md:table-cell": shownColumns.includes(header.column.id),
+                      "table-cell": shownColumnsSm.includes(header.column.id),
+                    })}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {movieNightTable.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    className={
+                      cn("hidden", {
+                        "md:table-cell": shownColumns.includes(cell.column.id),
+                        "table-cell": shownColumnsSm.includes(cell.column.id),
+                      })
 
-                    // hiddenColumns.includes(cell.column.id) && "hidden",
-                    // "md:table-cell",
-                  }
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <DataTablePagination table={movieNightTable} />
+                      // hiddenColumns.includes(cell.column.id) && "hidden",
+                      // "md:table-cell",
+                    }
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter className="justify-center border-t bg-muted/50 px-6 py-3">
+        <DataTablePagination table={movieNightTable} />
+      </CardFooter>
     </>
   );
 }

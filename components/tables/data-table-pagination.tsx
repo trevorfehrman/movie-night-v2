@@ -23,7 +23,7 @@ export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center justify-center px-2 md:justify-between">
+    <>
       <div className="hidden flex-1 text-sm text-muted-foreground md:block">
         {table.getFilteredRowModel().rows.length} results
       </div>
@@ -91,6 +91,6 @@ export function DataTablePagination<TData>({
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
