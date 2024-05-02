@@ -45,13 +45,13 @@ export default async function Home() {
               <CardTitle className="flex items-center gap-2 text-lg">
                 Whose turn is it
               </CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 {Intl.DateTimeFormat("en-US", {
                   weekday: "long",
                   month: "long",
                   day: "numeric",
                 }).format(new Date())}
-              </CardDescription>
+              </CardDescription> */}
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-y-4 p-6 text-sm">

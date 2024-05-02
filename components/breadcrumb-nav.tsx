@@ -33,11 +33,14 @@ export function BreadcrumbNav() {
 
           if (readableSegment === "/") {
             readableSegment = (
-              <div className="flex items-center justify-center">
-                <Check className="h-4" /> <MoveRight className="h-4" />{" "}
-                <Clock className="h-4" />
-                <MousePointerClick className="h-4" />
-              </div>
+              <>
+                <p className="sr-only">Home</p>
+                <div className="flex items-center justify-center">
+                  <Check className="h-4" /> <MoveRight className="h-4" />{" "}
+                  <Clock className="h-4" />
+                  <MousePointerClick className="h-4" />
+                </div>
+              </>
             );
           }
 
