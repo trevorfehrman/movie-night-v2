@@ -32,11 +32,11 @@ export default function ChatBox({ posts }: { posts: ChatMessages }) {
   React.useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
-      // requestAnimationFrame(() => {
-      //   if (containerRef.current) {
-      //     containerRef.current.style.visibility = "visible";
-      //   }
-      // });
+      requestAnimationFrame(() => {
+        if (containerRef.current) {
+          containerRef.current.style.visibility = "visible";
+        }
+      });
     }
   }, []);
 
@@ -44,7 +44,7 @@ export default function ChatBox({ posts }: { posts: ChatMessages }) {
     <ul
       className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto"
       ref={containerRef}
-      // style={{ visibility: "hidden" }}
+      style={{ visibility: "hidden" }}
     >
       {messages.map((message) => (
         <li

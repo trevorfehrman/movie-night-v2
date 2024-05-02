@@ -88,7 +88,7 @@ export default async function Home() {
               <CardDescription>Say something</CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="p-0">
+          <CardContent className="max-h-96 min-h-96 p-0">
             <ChatBox posts={validatedPosts} />
           </CardContent>
           <CardFooter className="flex items-center gap-4 border-t bg-muted/50 px-6 py-3">
