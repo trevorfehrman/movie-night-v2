@@ -32,7 +32,7 @@ export function ChatInput() {
       />
       <Button
         type="submit"
-        name="submit message"
+        aria-label="submit message"
         size="icon"
         variant="outline"
         onClick={(e) => {

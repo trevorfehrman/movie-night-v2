@@ -4,10 +4,10 @@ import * as React from "react";
 import { pusherClient } from "@/lib/pusher/client";
 import { ChatMessageSchema, ChatMessages } from "@/lib/schemas/chat";
 import { ImageWithFallback } from "./image-with-fallback";
-// import { CardDescription } from "./ui/card";
-// import { getReadableDateTime } from "@/lib/utils";
+import { CardDescription } from "./ui/card";
+import { getReadableDateTime } from "@/lib/utils";
 
-export function ChatBox({ posts }: { posts: ChatMessages }) {
+export default function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
   const containerRef = React.useRef<HTMLUListElement>(null);
 
@@ -32,19 +32,19 @@ export function ChatBox({ posts }: { posts: ChatMessages }) {
   React.useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
-      requestAnimationFrame(() => {
-        if (containerRef.current) {
-          containerRef.current.style.visibility = "visible";
-        }
-      });
+      // requestAnimationFrame(() => {
+      //   if (containerRef.current) {
+      //     containerRef.current.style.visibility = "visible";
+      //   }
+      // });
     }
   }, []);
 
   return (
     <ul
-      className="flex max-h-96 flex-col gap-y-4 overflow-auto"
+      className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto"
       ref={containerRef}
-      style={{ visibility: "hidden" }}
+      // style={{ visibility: "hidden" }}
     >
       {messages.map((message) => (
         <li
@@ -61,9 +61,9 @@ export function ChatBox({ posts }: { posts: ChatMessages }) {
           <div>
             <div className="flex items-center gap-x-2">
               <p className="font-semibold">{message.userFirstName}</p>
-              {/* <CardDescription>
+              <CardDescription>
                 {getReadableDateTime(message.createdAt)}
-              </CardDescription> */}
+              </CardDescription>
             </div>
             <p className="text-sm">{message.message}</p>
           </div>
