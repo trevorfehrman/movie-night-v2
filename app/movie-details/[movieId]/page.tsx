@@ -38,7 +38,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
   const { userId } = auth();
 
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
-  const readableDate = getReadableDate(movieDetails?.release_date);
+  const readableDate = getReadableDate(movieDetails?.release_date ?? "");
   const trailerId = getTrailerId(movieDetails?.videos.results);
 
   const crewMap = createCrewMap(movieDetails?.credits.crew);
