@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
-// import { ChatBox } from "@/components/chat-box";
 const ChatBox = dynamic(() => import("@/components/chat-box"), { ssr: false });
 import { ChatInput } from "@/components/chat-input";
-import { ImageWithFallback } from "@/components/image-with-fallback";
 import { MovieNightTable } from "@/components/tables/movie-night-table";
 import {
   Card,
@@ -13,11 +11,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/db";
-import { redis } from "@/lib/redis/client";
+import { redis } from "@/lib/redis/server";
 import { ChatMessagesSchema } from "@/lib/schemas/chat";
+import { Protect } from "@clerk/nextjs";
+import { MovieNightMemberOrderList } from "@/components/movie-might-member-order-list";
+import { SelectUserSchema } from "@/db/schema";
+import { z } from "zod";
 
 export default async function Home() {
-  const users = await db.query.users.findMany();
+  // const users = await db.query.users.findMany();
   const movies = await db.query.movies.findMany({
     orderBy: (posts, { desc }) => [desc(posts.createdAt)],
     with: {
@@ -30,8 +32,22 @@ export default async function Home() {
   });
 
   const posts = await redis.lrange("posts", -50, -1);
+  const movieNightMembers = await redis.zrange("movie_night_members", 0, -1);
+  const cursor = await redis.get("cursor");
+  const validatedCursor = z.number().parse(cursor);
+
+  // const thing = await redis.zadd("movie_night_members", {
+  //   score: 1,
+  //   member: JSON.stringify({ ...users[1], score: 1 }),
+  // });
+
+  const SelectUsersWithScore = z.array(
+    SelectUserSchema.extend({ score: z.number() }),
+  );
 
   const validatedPosts = ChatMessagesSchema.parse(posts);
+  const validatedMovieNightMembers =
+    SelectUsersWithScore.parse(movieNightMembers);
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
@@ -41,44 +57,10 @@ export default async function Home() {
         </Card>
       </div>
       <div className="flex flex-col gap-y-4">
-        <Card className="overflow-hidden">
-          <CardHeader className="flex flex-row items-start bg-muted/50">
-            <div className="grid gap-0.5">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                Whose turn is it
-              </CardTitle>
-              <CardDescription>
-                {Intl.DateTimeFormat("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                }).format(new Date())}
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-y-4 p-6 text-sm">
-            {users.map((user) => (
-              <div
-                className="flex items-center gap-x-2"
-                key={String(Math.random())}
-              >
-                <ImageWithFallback
-                  src={user.imgUrl}
-                  height={40}
-                  width={40}
-                  className="rounded-full"
-                  alt={`Profile picture of ${user.firstName}`}
-                />
-                <div>{user.firstName}</div>
-              </div>
-            ))}
-          </CardContent>
-          <CardFooter className="flex items-center border-t bg-muted/50 px-6 py-3">
-            <div className="text-xs text-muted-foreground">
-              Updated <time dateTime="2023-11-23">November 23, 2023</time>
-            </div>
-          </CardFooter>
-        </Card>
+        <MovieNightMemberOrderList
+          validatedMovieNightMembers={validatedMovieNightMembers}
+          validatedCursor={validatedCursor}
+        />
         <Card className="relative">
           <CardHeader className="flex flex-row items-start bg-muted/50">
             <div className="grid gap-0.5">
@@ -91,8 +73,10 @@ export default async function Home() {
           <CardContent className="max-h-96 min-h-96 p-0">
             <ChatBox posts={validatedPosts} />
           </CardContent>
-          <CardFooter className="flex items-center gap-4 border-t bg-muted/50 px-6 py-3">
-            <ChatInput />
+          <CardFooter className="flex min-h-10 items-center gap-4 border-t bg-muted/50 px-6 py-3">
+            <Protect permission="org:movie:create">
+              <ChatInput />
+            </Protect>
           </CardFooter>
         </Card>
         <Card>

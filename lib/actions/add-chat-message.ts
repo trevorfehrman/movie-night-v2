@@ -2,7 +2,7 @@
 
 import { action } from "./safe-action";
 import { auth } from "@clerk/nextjs/server";
-import { redis } from "../redis/client";
+import { redis } from "../redis/server";
 import { getPusherInstance } from "../pusher/server";
 import { nanoid } from "nanoid";
 import {

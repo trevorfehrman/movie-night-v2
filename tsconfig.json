@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "use-sound": ["./generated-types/"]
     }
   },
   "include": [
