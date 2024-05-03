@@ -116,7 +116,7 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           className="max-w-xs"
         />
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <Table>
           <TableHeader>
             {movieNightTable.getHeaderGroups().map((headerGroup) => (

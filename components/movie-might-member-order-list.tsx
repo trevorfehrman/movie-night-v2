@@ -18,6 +18,8 @@ import { pusherClient } from "@/lib/pusher/client";
 import { z } from "zod";
 
 import { LayoutGroup, motion } from "framer-motion";
+import { Protect } from "@clerk/nextjs";
+import { MoveUp } from "lucide-react";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -31,7 +33,7 @@ export function MovieNightMemberOrderList({
   validatedCursor: number;
 }) {
   const { execute } = useAction(safeSetCursor);
-  // const { execute, status } = useAction(safeSetCursor);
+  const isInitialMount = React.useRef(true); // Create a ref to track the initial mount
 
   const [play] = useSound("/boing.mp3");
 
@@ -44,10 +46,16 @@ export function MovieNightMemberOrderList({
         const validatedData = z.number().parse(data);
         setCursor(validatedData);
       });
+    if (isInitialMount.current) {
+      isInitialMount.current = false; // Modify ref to false after the first render
+    } else {
+      play();
+    }
 
     return () => {
       channel.unbind();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- play has an unstable reference so we don't include it here
   }, [cursor]);
 
   return (
@@ -79,25 +87,30 @@ export function MovieNightMemberOrderList({
                   stiffness: 250,
                   damping: 20,
                 }}
-                className="flex items-center gap-x-2"
+                className="flex items-center justify-between"
                 key={user.id}
               >
-                <ImageWithFallback
-                  src={user.imgUrl}
-                  height={40}
-                  width={40}
-                  className="rounded-full"
-                  alt={`Profile picture of ${user.firstName}`}
-                />
-                <div>{user.firstName}</div>
-                <Button
-                  onClick={() => {
-                    execute({ cursor: user.score });
-                    play();
-                  }}
-                >
-                  Set {user.score}
-                </Button>
+                <div className="flex items-center gap-x-2">
+                  <ImageWithFallback
+                    src={user.imgUrl}
+                    height={40}
+                    width={40}
+                    className="rounded-full"
+                    alt={`Profile picture of ${user.firstName}`}
+                  />
+                  <div>{user.firstName}</div>
+                </div>
+                <Protect permission="org:movie:create">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => execute({ cursor: user.score })}
+                    className="size-8"
+                    aria-label="Move up"
+                  >
+                    <MoveUp className="size-4" />
+                  </Button>
+                </Protect>
               </motion.div>
             ))}
         </LayoutGroup>
