@@ -21,7 +21,6 @@ import { LayoutGroup, motion } from "framer-motion";
 import { Protect } from "@clerk/nextjs";
 import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
-import { is } from "drizzle-orm";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>

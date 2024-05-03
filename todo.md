@@ -1,4 +1,4 @@
-Role based permissions
+X Role based permissions
 
 Github actions
 
@@ -14,7 +14,7 @@ Admin panel? Admin UI?
 
 Profile pages
 
-Turn order list realtime?
+x Turn order list realtime?
 
 Axiom
 
