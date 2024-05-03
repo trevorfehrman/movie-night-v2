@@ -20,6 +20,8 @@ import { z } from "zod";
 import { LayoutGroup, motion } from "framer-motion";
 import { Protect } from "@clerk/nextjs";
 import { MoveUp } from "lucide-react";
+import { Checkbox } from "./ui/checkbox";
+import { is } from "drizzle-orm";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -38,6 +40,7 @@ export function MovieNightMemberOrderList({
   const [play] = useSound("/boing.mp3");
 
   const [cursor, setCursor] = React.useState(validatedCursor);
+  const [isBoingEnabled, setIsBoingEnabled] = React.useState(false);
 
   React.useEffect(() => {
     const channel = pusherClient
@@ -49,7 +52,7 @@ export function MovieNightMemberOrderList({
     if (isInitialMount.current) {
       isInitialMount.current = false; // Modify ref to false after the first render
     } else {
-      play();
+      isBoingEnabled && play();
     }
 
     return () => {
@@ -116,8 +119,18 @@ export function MovieNightMemberOrderList({
         </LayoutGroup>
       </CardContent>
       <CardFooter className="flex items-center border-t bg-muted/50 px-6 py-3">
-        <div className="text-xs text-muted-foreground">
-          Updated <time dateTime="2023-11-23">November 23, 2023</time>
+        <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
+          <Checkbox
+            id="boing"
+            onCheckedChange={() => setIsBoingEnabled((prev) => !prev)}
+            checked={isBoingEnabled}
+          />
+          <label
+            htmlFor="boing"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Enable boing
+          </label>
         </div>
       </CardFooter>
     </Card>
