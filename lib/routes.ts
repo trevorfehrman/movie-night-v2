@@ -17,4 +17,8 @@ export const Routes = {
     ({ movieId }) => `/movie-details/${movieId}`,
     z.object({ movieId: z.string() }),
   ),
+  talentDetails: makeRoute(
+    ({ talentId }) => `/talent-details/${talentId}`,
+    z.object({ talentId: z.string() }),
+  ),
 };

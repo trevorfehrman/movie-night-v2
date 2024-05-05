@@ -25,9 +25,11 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
   const { userId, id: tmdbId } = movieDetails;
 
   let director;
+  let directorId;
 
-  if (crewMap?.director) {
+  if (crewMap?.director && crewMap.director.id) {
     director = crewMap.director.name;
+    directorId = crewMap.director.id;
   } else {
     throw new Error("No director found");
   }
@@ -43,27 +45,36 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
   const budget = movieDetails.budget;
   const revenue = movieDetails.revenue;
   const runtime = movieDetails.runtime;
-  const composer = crewMap.composer?.name;
-  const directorOfPhotography = crewMap.directorOfPhotography?.name;
+  const comp = crewMap.composer;
+  const composer = comp?.name;
+  const composerId = comp?.id;
+  const dop = crewMap.directorOfPhotography;
+  const directorOfPhotography = dop?.name;
+  const directorOfPhotographyId = dop?.id;
 
   await db.transaction(async (tx) => {
+    const payload = {
+      id: String(tmdbId),
+      userId,
+      posterPath,
+      title,
+      director,
+      directorId: String(directorId),
+      directorOfPhotography,
+      directorOfPhotographyId: String(directorOfPhotographyId),
+      composer,
+      composerId: String(composerId),
+      year,
+      country,
+      budget,
+      revenue,
+      runtime,
+    };
+
     // Insert movie
     const movieInsert = await tx
       .insert(schema.movies)
-      .values({
-        id: String(tmdbId),
-        userId,
-        posterPath,
-        title,
-        director,
-        year,
-        country,
-        budget,
-        revenue,
-        runtime,
-        composer,
-        directorOfPhotography,
-      })
+      .values(payload)
       .onConflictDoNothing()
       .returning({ movieId: schema.movies.id });
 
@@ -73,7 +84,6 @@ async function addMovie(movieDetails: MovieDetails & { userId: string }) {
     // Prepare actors and moviesToActors
     const cast = movieDetails.credits.cast.slice(0, 10).map((actor) => ({
       id: String(actor.id),
-      movieId,
       name: actor.name,
     }));
 

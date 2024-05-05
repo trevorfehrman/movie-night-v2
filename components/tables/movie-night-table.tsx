@@ -75,6 +75,14 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Director" />
         ),
+        cell: ({ row }) => (
+          <Link
+            href={`/talent-details/${row.original.directorId}`}
+            className="decoration-primary hover:underline"
+          >
+            {row.original.director}
+          </Link>
+        ),
       }),
       movieNightColumnHelper.accessor("user.firstName", {
         header: ({ column }) => (

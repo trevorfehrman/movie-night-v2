@@ -1,4 +1,5 @@
 // libs/pusher/server/index.ts
+import "server-only";
 import { env } from "@/env";
 import PusherServer from "pusher";
 

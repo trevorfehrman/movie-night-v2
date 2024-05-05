@@ -55,38 +55,41 @@ export default async function Page({ params }: MovieSearchPageProps) {
           <div className="grid gap-4 lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
               <Card>
-                <CardHeader>
-                  <div>
-                    <div className="mb-2 flex justify-between sm:m-0">
-                      <CardTitle as="h1">{movieDetails.title}</CardTitle>
-                      <Protect permission="org:movie:create">
-                        {userId && (
-                          <AddMovieButton
-                            movieDetails={movieDetails}
-                            userId={userId}
-                          />
-                        )}
-                      </Protect>
-                    </div>
-                    <p className="dark:text-primary">
+                <CardHeader className="mb-4 bg-muted/50">
+                  <div className="mb-2 flex justify-between sm:m-0">
+                    <CardTitle as="h1">{movieDetails.title}</CardTitle>
+                    <Protect permission="org:movie:create">
+                      {userId && (
+                        <AddMovieButton
+                          movieDetails={movieDetails}
+                          userId={userId}
+                        />
+                      )}
+                    </Protect>
+                  </div>
+                  <p className="dark:text-primary">
+                    <Link
+                      className="hover:underline"
+                      href={`/talent-details/${crewMap?.director?.id}`}
+                    >
                       {crewMap?.director?.name}
-                      {movieDetails.production_countries.length > 0 &&
-                        " | " + movieDetails.production_countries[0].name}
-                    </p>
-                    <CardDescription>
-                      {readableDate && `${readableDate} | `}
-                      {movieDetails.runtime !== 0 && `${movieDetails.runtime}m`}
-                    </CardDescription>
-                    <CardDescription>{movieDetails.tagline}</CardDescription>
+                    </Link>
+                    {movieDetails.production_countries.length > 0 &&
+                      " | " + movieDetails.production_countries[0].name}
+                  </p>
+                  <CardDescription>
+                    {readableDate && `${readableDate} | `}
+                    {movieDetails.runtime !== 0 && `${movieDetails.runtime}m`}
+                  </CardDescription>
+                  <CardDescription>{movieDetails.tagline}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
                     <div className="mt-2 flex gap-x-2">
                       {movieDetails.genres.map((genre) => (
                         <Badge key={genre.id}>{genre.name}</Badge>
                       ))}
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4">
                     <div className="space-y-2">
                       <h2>Overview:</h2>
                       <blockquote className="text-balance border-l-2 border-primary pl-6 italic">
@@ -95,7 +98,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex flex-col justify-between gap-y-2 sm:flex-row">
+                <CardFooter className="flex flex-col justify-between gap-y-2 bg-muted/50 pt-6 sm:flex-row">
                   <div className="flex gap-4">
                     {movieDetails.production_companies
                       .filter((company) => Boolean(company.logo_path))
@@ -139,23 +142,23 @@ export default async function Page({ params }: MovieSearchPageProps) {
                 </Card>
               )}
               <Card>
-                <CardHeader>
-                  <CardTitle>Credits</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="cast">
+                <Tabs defaultValue="cast">
+                  <CardHeader className="flex flex-col gap-y-4 bg-muted/50">
+                    <CardTitle>Credits</CardTitle>
                     <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value="cast">Cast</TabsTrigger>
                       <TabsTrigger value="crew">Crew</TabsTrigger>
                     </TabsList>
+                  </CardHeader>
+                  <CardContent className="p-0">
                     <TabsContent value="cast">
                       <CastTable cast={movieDetails.credits.cast} />
                     </TabsContent>
                     <TabsContent value="crew">
                       <CrewTable cast={movieDetails.credits.crew} />
                     </TabsContent>
-                  </Tabs>
-                </CardContent>
+                  </CardContent>
+                </Tabs>
               </Card>
             </div>
             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
@@ -173,20 +176,21 @@ export default async function Page({ params }: MovieSearchPageProps) {
               </Card>
               {movieDetails.budget > 0 && movieDetails.revenue > 0 && (
                 <Card>
-                  <CardHeader className="pb-0">
+                  <CardHeader className="bg-muted/50">
                     <CardTitle>Budget </CardTitle>
                   </CardHeader>
-                  <CardContent className=" h-60 w-full">
+                  <CardContent className="mt-4 h-60 w-full">
                     <BudgetChart
                       budget={movieDetails.budget}
                       revenue={movieDetails.revenue}
                     />
                   </CardContent>
+                  <CardFooter className="min-h-8 bg-muted/50" />
                 </Card>
               )}
               {shouldShowWatchProviders && (
                 <Card>
-                  <CardHeader>
+                  <CardHeader className="bg-muted/50">
                     <CardTitle>
                       Watch Providers{" "}
                       <p className="text-sm dark:text-primary">
@@ -194,7 +198,7 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       </p>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-col gap-4">
+                  <CardContent className="mt-4 flex flex-col gap-4">
                     {movieDetails["watch/providers"].results.US?.flatrate && (
                       <div>
                         <p className="mb-2">Streaming</p>
@@ -275,18 +279,20 @@ export default async function Page({ params }: MovieSearchPageProps) {
                       </div>
                     )}
                   </CardContent>
+                  <CardFooter className="min-h-8 bg-muted/50" />
                 </Card>
               )}
 
               <Card>
-                <CardHeader>
+                <CardHeader className="bg-muted/50">
                   <CardTitle>Keywords</CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-wrap gap-x-4 gap-y-2">
+                <CardContent className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
                   {movieDetails.keywords.keywords.map((keyword) => (
                     <span key={keyword.id}>{keyword.name}</span>
                   ))}
                 </CardContent>
+                <CardFooter className="min-h-8 bg-muted/50" />
               </Card>
             </div>
           </div>

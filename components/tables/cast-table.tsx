@@ -24,6 +24,8 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { MovieDetails } from "@/lib/tmdb/get-movie-details";
 import { planescapeDataURL } from "@/lib/constants";
+import { CardFooter } from "../ui/card";
+import Link from "next/link";
 
 type Cast = MovieDetails["credits"]["cast"];
 type CastMember = MovieDetails["credits"]["cast"][number];
@@ -34,11 +36,11 @@ export function CastTable({ cast }: { cast: Cast }) {
   const castColumns = React.useMemo(
     () => [
       castColumnHelper.accessor("profile_path", {
-        header: () => <span>Picture</span>,
+        header: () => <></>,
         cell: ({ row }) => {
           const profilePath = row.original.profile_path;
           return (
-            <div className="relative aspect-movie-poster h-20">
+            <div className="relative ml-4 aspect-movie-poster h-20">
               <ImageWithFallback
                 alt={`Picture for ${row.original.name}`}
                 src={`https://image.tmdb.org/t/p/w92/${profilePath}`}
@@ -56,6 +58,14 @@ export function CastTable({ cast }: { cast: Cast }) {
       castColumnHelper.accessor("name", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
+        ),
+        cell: ({ row }) => (
+          <Link
+            className="decoration-primary hover:underline"
+            href={`/talent-details/${row.original.id}`}
+          >
+            {row.original.name}
+          </Link>
         ),
       }),
       castColumnHelper.accessor("character", {
@@ -91,7 +101,7 @@ export function CastTable({ cast }: { cast: Cast }) {
   const hiddenColumns = ["profile_path", "popularity"];
   return (
     <>
-      <div className="flex items-center py-4">
+      <div className="ml-6 flex items-center py-4">
         <Input
           placeholder="Filter..."
           onChange={(event) =>
@@ -123,7 +133,7 @@ export function CastTable({ cast }: { cast: Cast }) {
         </TableHeader>
         <TableBody>
           {castTable.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} className="px-4">
               {row.getVisibleCells().map((cell) => (
                 <TableCell
                   key={cell.id}
@@ -139,7 +149,9 @@ export function CastTable({ cast }: { cast: Cast }) {
           ))}
         </TableBody>
       </Table>
-      <DataTablePagination table={castTable} />
+      <CardFooter className="justify-center border-t bg-muted/50 px-6 py-3">
+        <DataTablePagination table={castTable} />
+      </CardFooter>
     </>
   );
 }

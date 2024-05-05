@@ -22,27 +22,27 @@ import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { MovieDetails } from "@/lib/tmdb/get-movie-details";
 import { planescapeDataURL } from "@/lib/constants";
 import { CardFooter } from "../ui/card";
+import { TalentDetails } from "@/lib/tmdb/get-talent-details";
 import Link from "next/link";
 
-type Cast = MovieDetails["credits"]["crew"];
-type CastMember = MovieDetails["credits"]["crew"][number];
+type TalentCast = TalentDetails["movie_credits"]["cast"];
+type TalentCastMember = TalentDetails["movie_credits"]["cast"][number];
 
-const castColumnHelper = createColumnHelper<CastMember>();
+const talentCastColumnHelper = createColumnHelper<TalentCastMember>();
 
-export function CrewTable({ cast }: { cast: Cast }) {
-  const castColumns = React.useMemo(
+export function TalentCastTable({ talentCast }: { talentCast: TalentCast }) {
+  const talentCastColumns = React.useMemo(
     () => [
-      castColumnHelper.accessor("profile_path", {
+      talentCastColumnHelper.accessor("poster_path", {
         header: () => <></>,
         cell: ({ row }) => {
-          const profilePath = row.original.profile_path;
+          const profilePath = row.original.poster_path;
           return (
             <div className="relative ml-4 aspect-movie-poster h-20">
               <ImageWithFallback
-                alt={`Picture for ${row.original.name}`}
+                alt={`Picture for ${row.original.title}`}
                 src={`https://image.tmdb.org/t/p/w92/${profilePath}`}
                 placeholder="blur"
                 blurDataURL={planescapeDataURL}
@@ -55,37 +55,35 @@ export function CrewTable({ cast }: { cast: Cast }) {
         },
         enableGlobalFilter: false,
       }),
-      castColumnHelper.accessor("name", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Name" />
-        ),
-        cell: ({ row }) => (
-          <Link
-            className="decoration-primary hover:underline"
-            href={`/talent-details/${row.original.id}`}
-          >
-            {row.original.name}
-          </Link>
-        ),
-      }),
-      castColumnHelper.accessor("job", {
+      talentCastColumnHelper.accessor("title", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Title" />
         ),
-      }),
-      castColumnHelper.accessor("popularity", {
-        size: 50,
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Popularity Score" />
+        cell: ({ row }) => (
+          <Link
+            href={`/movie-details/${row.original.id}`}
+            className="decoration-primary hover:underline"
+          >
+            {row.original.title}
+          </Link>
         ),
-        cell: ({ row }) => Math.ceil(row.original.popularity),
+      }),
+      talentCastColumnHelper.accessor("character", {
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Character" />
+        ),
+      }),
+      talentCastColumnHelper.accessor("release_date", {
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Release Date" />
+        ),
       }),
     ],
     [],
   );
   const castTable = useReactTable({
-    data: cast,
-    columns: castColumns,
+    data: talentCast,
+    columns: talentCastColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -98,7 +96,7 @@ export function CrewTable({ cast }: { cast: Cast }) {
     },
   });
 
-  const hiddenColumns = ["profile_path", "popularity"];
+  const hiddenColumns = ["poster_path"];
   return (
     <>
       <div className="ml-6 flex items-center py-4">
@@ -133,7 +131,7 @@ export function CrewTable({ cast }: { cast: Cast }) {
         </TableHeader>
         <TableBody>
           {castTable.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row.id} className="px-4">
               {row.getVisibleCells().map((cell) => (
                 <TableCell
                   key={cell.id}
