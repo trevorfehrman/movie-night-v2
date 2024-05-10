@@ -9,7 +9,7 @@ import { getReadableDateTime } from "@/lib/utils";
 
 export default function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
-  const bottomRef = React.useRef<HTMLDivElement>(null);
+  const bottomRef = React.useRef<HTMLLIElement>(null);
 
   React.useEffect(() => {
     const channel = pusherClient
@@ -27,31 +27,33 @@ export default function ChatBox({ posts }: { posts: ChatMessages }) {
   }, [messages]);
 
   return (
-    <ul className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto">
-      {messages.map((message) => (
-        <li
-          key={message.id}
-          className="flex gap-x-4 px-6 py-2 hover:bg-muted/50"
-        >
-          <ImageWithFallback
-            src={message.imgUrl}
-            height={30}
-            width={30}
-            className="h-fit w-fit rounded-full"
-            alt={`Profile picture of ${message.userFirstName}`}
-          />
-          <div>
-            <div className="flex items-center gap-x-2">
-              <p className="font-semibold">{message.userFirstName}</p>
-              <CardDescription>
-                {getReadableDateTime(message.createdAt)}
-              </CardDescription>
+    <>
+      <ul className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto">
+        {messages.map((message) => (
+          <li
+            key={message.id}
+            className="flex gap-x-4 px-6 py-2 hover:bg-muted/50"
+          >
+            <ImageWithFallback
+              src={message.imgUrl}
+              height={30}
+              width={30}
+              className="h-fit w-fit rounded-full"
+              alt={`Profile picture of ${message.userFirstName}`}
+            />
+            <div>
+              <div className="flex items-center gap-x-2">
+                <p className="font-semibold">{message.userFirstName}</p>
+                <CardDescription>
+                  {getReadableDateTime(message.createdAt)}
+                </CardDescription>
+              </div>
+              <p className="text-sm">{message.message}</p>
             </div>
-            <p className="text-sm">{message.message}</p>
-          </div>
-        </li>
-      ))}
-      <div ref={bottomRef} />
-    </ul>
+          </li>
+        ))}
+        <li ref={bottomRef} />
+      </ul>
+    </>
   );
 }

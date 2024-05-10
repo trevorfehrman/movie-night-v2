@@ -21,4 +21,5 @@ export const Routes = {
     ({ talentId }) => `/talent-details/${talentId}`,
     z.object({ talentId: z.string() }),
   ),
+  adminDashboard: makeRoute(() => `/admin-dashboard`),
 };

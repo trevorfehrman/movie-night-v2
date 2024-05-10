@@ -24,7 +24,7 @@ import {
 } from "../ui/table";
 import Link from "next/link";
 import { planescapeDataURL } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, getReadableDate } from "@/lib/utils";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 type Movie = Awaited<ReturnType<typeof db.query.movies.findMany>>[number];
@@ -63,12 +63,20 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           <DataTableColumnHeader column={column} title="Title" />
         ),
         cell: ({ row }) => (
-          <Link
-            href={`/movie-details/${row.original.id}`}
-            className="decoration-primary hover:underline"
-          >
-            {row.original.title}
-          </Link>
+          <div className="flex flex-col">
+            <Link
+              href={`/movie-details/${row.original.id}`}
+              className="decoration-primary hover:underline"
+            >
+              {row.original.title}
+            </Link>
+            <time
+              className="text-sm text-muted-foreground"
+              dateTime={row.original.createdAt!}
+            >
+              {getReadableDate(row.original.createdAt!)}
+            </time>
+          </div>
         ),
       }),
       movieNightColumnHelper.accessor("director", {

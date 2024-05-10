@@ -120,6 +120,7 @@ export function MovieNightMemberOrderList({
       <CardFooter className="flex items-center border-t bg-muted/50 px-6 py-3">
         <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
           <Checkbox
+            aria-label="Enable boing sound effect"
             id="boing"
             onCheckedChange={() => setIsBoingEnabled((prev) => !prev)}
             checked={isBoingEnabled}

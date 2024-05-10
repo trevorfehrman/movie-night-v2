@@ -6,7 +6,7 @@ import {
   index,
   primaryKey,
 } from "drizzle-orm/sqlite-core";
-import { createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -58,6 +58,8 @@ export const movies = sqliteTable(
     countryIndex: index("country_index").on(table.country),
   }),
 );
+
+export const InsertMovieSchema = createInsertSchema(movies);
 
 export const moviesRelations = relations(movies, ({ one, many }) => ({
   user: one(users, {
