@@ -47,7 +47,6 @@ import { DevTool } from "@hookform/devtools";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -261,13 +260,16 @@ function AdminMovieRow({
                 </CardHeader>
                 <CardContent className="text-base">
                   <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex flex-col gap-y-4"
+                    >
                       <FormField
                         control={form.control}
                         name="userId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>User:</FormLabel>
+                            <FormLabel>User</FormLabel>
                             <Select
                               onValueChange={(val) => {
                                 form.setValue("userId", val);
@@ -293,7 +295,6 @@ function AdminMovieRow({
                                 ))}
                               </SelectContent>
                             </Select>
-                            <FormDescription>User</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -311,9 +312,6 @@ function AdminMovieRow({
                                 value={field.value ?? ""}
                               />
                             </FormControl>
-                            <FormDescription>
-                              This is for rouzies
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -322,8 +320,8 @@ function AdminMovieRow({
                         control={form.control}
                         name="createdAt"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Created At</FormLabel>
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Date</FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>
                                 <FormControl>
@@ -361,7 +359,6 @@ function AdminMovieRow({
                                 />
                               </PopoverContent>
                             </Popover>
-                            <FormDescription>Date of addition</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -374,7 +371,7 @@ function AdminMovieRow({
                   </Form>
                   <DevTool control={form.control} />
                 </CardContent>
-                <CardFooter>move on cowboy</CardFooter>
+                <CardFooter></CardFooter>
               </Card>
             </TableCell>
           </TableRow>
