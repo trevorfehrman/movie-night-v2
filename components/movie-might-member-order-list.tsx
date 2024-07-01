@@ -20,7 +20,7 @@ import { z } from "zod";
 
 import { LayoutGroup, motion } from "framer-motion";
 import { Protect, useUser } from "@clerk/nextjs";
-import { MoveUp } from "lucide-react";
+import { MoveUp, PartyPopper } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
 import { safeTriggerParty } from "@/lib/actions/trigger-party";
@@ -70,6 +70,7 @@ export function MovieNightMemberOrderList({
       console.log("hihihihi");
       const validatedData = z.string().parse(data);
       playHorn();
+      reward();
       console.log(validatedData);
     });
 
@@ -87,14 +88,15 @@ export function MovieNightMemberOrderList({
             Whose turn is it
             <Button
               id="rewardId"
+              size="icon"
+              className="size-8"
               onClick={() => {
                 if (user?.firstName) {
                   safeParty.execute({ rouzer: user.firstName });
                 }
-                reward();
               }}
             >
-              Party time
+              <PartyPopper className="size-4" />
             </Button>
           </CardTitle>
           <CardDescription>
