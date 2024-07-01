@@ -21,5 +21,5 @@ async function updateMovie(movie: z.infer<typeof InsertMovieSchema>) {
     set: movie,
   });
 
-  // revalidatePath("/admin-dashboard");
+  revalidatePath("/admin-dashboard");
 }
