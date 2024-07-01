@@ -86,18 +86,20 @@ export function MovieNightMemberOrderList({
         <div className="grid gap-0.5">
           <CardTitle className="flex items-center gap-2 text-lg">
             Whose turn is it
-            <Button
-              id="rewardId"
-              size="icon"
-              className="size-8"
-              onClick={() => {
-                if (user?.firstName) {
-                  safeParty.execute({ rouzer: user.firstName });
-                }
-              }}
-            >
-              <PartyPopper className="size-4" />
-            </Button>
+            {user && (
+              <Button
+                id="rewardId"
+                size="icon"
+                className="size-8"
+                onClick={() => {
+                  if (user?.firstName) {
+                    safeParty.execute({ rouzer: user.firstName });
+                  }
+                }}
+              >
+                <PartyPopper className="size-4" />
+              </Button>
+            )}
           </CardTitle>
           <CardDescription>
             {Intl.DateTimeFormat("en-US", {
