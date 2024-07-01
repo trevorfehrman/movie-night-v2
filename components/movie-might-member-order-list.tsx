@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import useSound from "use-sound";
+import { useReward } from "react-rewards";
 import { ImageWithFallback } from "./image-with-fallback";
 import {
   Card,
@@ -18,10 +19,11 @@ import { pusherClient } from "@/lib/pusher/client";
 import { z } from "zod";
 
 import { LayoutGroup, motion } from "framer-motion";
-import { Protect } from "@clerk/nextjs";
+import { Protect, useUser } from "@clerk/nextjs";
 import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
+import { safeTriggerParty } from "@/lib/actions/trigger-party";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -34,26 +36,42 @@ export function MovieNightMemberOrderList({
   validatedMovieNightMembers: UserWithScore[];
   validatedCursor: number;
 }) {
-  const { execute } = useAction(safeSetCursor);
+  const safeCursor = useAction(safeSetCursor);
+  const safeParty = useAction(safeTriggerParty);
   const isInitialMount = React.useRef(true); // Create a ref to track the initial mount
+  const { user } = useUser();
 
-  const [play] = useSound("/boing.mp3");
+  const [playBoing] = useSound("/boing.mp3");
+  const [playHorn] = useSound("/air-horn.mp3");
+
+  const { reward } = useReward("rewardId", "confetti", {
+    angle: 180,
+    elementCount: 300,
+    colors: ["#facc15", "#fafaf9"],
+  });
 
   const [cursor, setCursor] = React.useState(validatedCursor);
   const [isBoingEnabled, setIsBoingEnabled] = React.useState(false);
 
   React.useEffect(() => {
-    const channel = pusherClient
-      .subscribe("movie_night_members")
-      .bind("evt::set-cursor", (data: unknown) => {
-        const validatedData = z.number().parse(data);
-        setCursor(validatedData);
-      });
+    const channel = pusherClient.subscribe("movie_night_members");
+
+    channel.bind("evt::set-cursor", (data: unknown) => {
+      const validatedData = z.number().parse(data);
+      setCursor(validatedData);
+    });
     if (isInitialMount.current) {
       isInitialMount.current = false; // Modify ref to false after the first render
     } else {
-      isBoingEnabled && play();
+      isBoingEnabled && playBoing();
     }
+
+    channel.bind("evt::trigger-party", (data: unknown) => {
+      console.log("hihihihi");
+      const validatedData = z.string().parse(data);
+      playHorn();
+      console.log(validatedData);
+    });
 
     return () => {
       channel.unbind();
@@ -67,6 +85,17 @@ export function MovieNightMemberOrderList({
         <div className="grid gap-0.5">
           <CardTitle className="flex items-center gap-2 text-lg">
             Whose turn is it
+            <Button
+              id="rewardId"
+              onClick={() => {
+                if (user?.firstName) {
+                  safeParty.execute({ rouzer: user.firstName });
+                }
+                reward();
+              }}
+            >
+              Party time
+            </Button>
           </CardTitle>
           <CardDescription>
             {Intl.DateTimeFormat("en-US", {
@@ -112,7 +141,7 @@ export function MovieNightMemberOrderList({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => execute({ cursor: user.score })}
+                    onClick={() => safeCursor.execute({ cursor: user.score })}
                     className="size-8"
                     aria-label="Move up"
                   >

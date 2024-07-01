@@ -32,6 +32,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Routes } from "@/lib/routes";
 
 type Movie = Awaited<ReturnType<typeof db.query.movies.findMany>>[number];
 type MovieWithUserName = Movie & {
@@ -70,7 +71,7 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
         ),
         cell: ({ row }) => (
           <Link
-            href={`/movie-details/${row.original.id}`}
+            href={Routes.movieDetails({ movieId: row.original.id })}
             className="decoration-primary hover:underline"
           >
             {row.original.title}
@@ -83,7 +84,7 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
         ),
         cell: ({ row }) => (
           <Link
-            href={`/talent-details/${row.original.directorId}`}
+            href={Routes.talentDetails({ talentId: row.original.directorId })}
             className="decoration-primary hover:underline"
           >
             {row.original.director}
@@ -102,7 +103,7 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
         ),
         cell: ({ row }) => (
           <Link
-            href={`/rouzer-details/${row.original.userId}`}
+            href={Routes.rouzerDetails({ rouzerId: row.original.userId })}
             className="decoration-primary hover:underline"
           >
             {row.original.user.firstName}

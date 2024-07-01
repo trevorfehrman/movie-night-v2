@@ -58,6 +58,12 @@ export default async function Page({ params }: RouzerDetailsPageProps) {
       biography:
         "Trained in the art of the velvet glove by characters from Dangerous Liaisons.",
     },
+    steve: {
+      alias: "The Dancer",
+      description: "The dancer glides across the pool hall like a phantom.",
+      biography:
+        "Was taught the cruel lessons of life's ballet before he was 5.  It was dance or die.  He chose dance.",
+    },
   } as const;
 
   type PoolNickname = keyof typeof poolNickNameMap;

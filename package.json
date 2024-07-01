@@ -57,6 +57,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.51.4",
+    "react-rewards": "^2.0.4",
     "recharts": "^2.12.5",
     "server-only": "^0.0.1",
     "sharp": "^0.33.3",

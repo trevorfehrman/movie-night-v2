@@ -7,10 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { Settings, Film, Search, UserCog } from "lucide-react";
+import { Film, Search, UserCog } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/lib/routes";
+import { Protect } from "@clerk/nextjs";
 
 export function Nav() {
   const pathname = usePathname();
@@ -47,25 +48,27 @@ export function Nav() {
           </TooltipTrigger>
           <TooltipContent side="right">Search Movies</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href={Routes.adminDashboard()}
-              className={cn(
-                "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground outline-ring md:h-8 md:w-8 md:text-base",
-                pathname === "/admin-dashboard"
-                  ? "bg-primary"
-                  : "text-muted-foreground transition-colors hover:text-foreground",
-              )}
-            >
-              <UserCog className="h-5 w-5" />
-              <span className="sr-only">Admin</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Admin Dashboard</TooltipContent>
-        </Tooltip>
+        <Protect permission="org:movie:create">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href={Routes.adminDashboard()}
+                className={cn(
+                  "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground outline-ring md:h-8 md:w-8 md:text-base",
+                  pathname === "/admin-dashboard"
+                    ? "bg-primary"
+                    : "text-muted-foreground transition-colors hover:text-foreground",
+                )}
+              >
+                <UserCog className="h-5 w-5" />
+                <span className="sr-only">Admin</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Admin Dashboard</TooltipContent>
+          </Tooltip>
+        </Protect>
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
@@ -78,7 +81,7 @@ export function Nav() {
           </TooltipTrigger>
           <TooltipContent side="right">Settings</TooltipContent>
         </Tooltip>
-      </nav>
+      </nav> */}
     </TooltipProvider>
   );
 }

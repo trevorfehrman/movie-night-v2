@@ -1,12 +1,13 @@
 "use client";
 
-import { Film, PanelLeft, Search } from "lucide-react";
+import { Film, PanelLeft, Search, UserCog } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Routes } from "@/lib/routes";
+import { Protect } from "@clerk/nextjs";
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -47,6 +48,23 @@ export function MobileNav() {
             />
             Search
           </Link>
+          <Protect permission="org:movie:create">
+            <Link
+              href={Routes.adminDashboard()}
+              className={cn(
+                "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
+                pathname === "/admin-dashboard" && "text-foreground",
+              )}
+            >
+              <UserCog
+                className={cn(
+                  "h-5 w-5",
+                  pathname === "/admin-dashboard" && "text-primary",
+                )}
+              />
+              Admin
+            </Link>
+          </Protect>
         </nav>
       </SheetContent>
     </Sheet>
