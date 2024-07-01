@@ -21,7 +21,7 @@ import { z } from "zod";
 export default async function Home() {
   // const users = await db.query.users.findMany();
   const movies = await db.query.movies.findMany({
-    orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+    // orderBy: (movies, { desc }) => [desc(movies.createdAt)],
     with: {
       user: {
         columns: {
@@ -31,15 +31,55 @@ export default async function Home() {
     },
   });
 
+  const directorsMap = movies.reduce(
+    (acc, movie) => {
+      if (acc[movie.director]) {
+        acc[movie.director] += 1;
+      } else {
+        acc[movie.director] = 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const directors = Object.entries(directorsMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  const countriesMap = movies.reduce(
+    (acc, movie) => {
+      if (acc[movie.country]) {
+        acc[movie.country] += 1;
+      } else {
+        acc[movie.country] = 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const countries = Object.entries(countriesMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+  function getCountryName(code: string) {
+    return regionNames.of(code.toUpperCase()) || "Unknown country code";
+  }
+
   const posts = await redis.lrange("posts", -50, -1);
   const movieNightMembers = await redis.zrange("movie_night_members", 0, -1);
   const cursor = await redis.get("cursor");
   const validatedCursor = z.number().parse(cursor);
 
   // const thing = await redis.zadd("movie_night_members", {
-  //   score: 1,
-  //   member: JSON.stringify({ ...users[1], score: 1 }),
+  //   score: 14,
+  //   member: JSON.stringify({ ...users[14], score: 14 }),
   // });
+
+  // console.log(users.length, users);
 
   const SelectUsersWithScore = z.array(
     SelectUserSchema.extend({ score: z.number() }),
@@ -79,16 +119,47 @@ export default async function Home() {
             </Protect>
           </CardFooter>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>This Month</CardDescription>
-            <CardTitle className="text-4xl">$5,329</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xs text-muted-foreground">
-              +10% from last month
+        <Card className="relative">
+          <CardHeader className="flex flex-row items-start bg-muted/50">
+            <div className="grid gap-0.5">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                Directors
+              </CardTitle>
+              <CardDescription>Leaderboard</CardDescription>
             </div>
+          </CardHeader>
+          <CardContent className="mt-5">
+            {directors.map((director) => (
+              <div key={director[0]} className="flex justify-between">
+                <span>{director[0]}</span>
+                <span>{director[1]}</span>
+              </div>
+            ))}
           </CardContent>
+          <CardFooter className="flex min-h-10 items-center gap-4 border-t bg-muted/50 px-6 py-3">
+            Down with the patriarchy
+          </CardFooter>
+        </Card>
+        <Card className="relative">
+          <CardHeader className="flex flex-row items-start bg-muted/50">
+            <div className="grid gap-0.5">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                Countries
+              </CardTitle>
+              <CardDescription>Leaderboard</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="mt-5">
+            {countries.map((country) => (
+              <div key={country[0]} className="flex justify-between">
+                <span>{getCountryName(country[0])}</span>
+                <span>{country[1]}</span>
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter className="flex min-h-10 items-center gap-4 border-t bg-muted/50 px-6 py-3">
+            USA #1!
+          </CardFooter>
         </Card>
       </div>
     </main>

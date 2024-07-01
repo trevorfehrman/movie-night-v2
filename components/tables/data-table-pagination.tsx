@@ -57,7 +57,9 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => {
+              table.setPageIndex(0);
+            }}
             disabled={!table.getCanPreviousPage()}
             aria-label="Go to first page"
           >
@@ -67,7 +69,9 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
+            onClick={() => {
+              table.previousPage();
+            }}
             disabled={!table.getCanPreviousPage()}
             aria-label="Go to previous page"
           >
@@ -77,7 +81,9 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
+            onClick={() => {
+              table.nextPage();
+            }}
             disabled={!table.getCanNextPage()}
             aria-label="Go to next page"
           >
@@ -87,7 +93,10 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => {
+              const lastPage = table.getPageCount() - 1;
+              table.setPageIndex(lastPage);
+            }}
             disabled={!table.getCanNextPage()}
             aria-label="Go to last page"
           >

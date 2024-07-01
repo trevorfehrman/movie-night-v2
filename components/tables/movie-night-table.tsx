@@ -24,8 +24,14 @@ import {
 } from "../ui/table";
 import Link from "next/link";
 import { planescapeDataURL } from "@/lib/constants";
-import { cn, getReadableDate } from "@/lib/utils";
-import { CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { cn } from "@/lib/utils";
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 type Movie = Awaited<ReturnType<typeof db.query.movies.findMany>>[number];
 type MovieWithUserName = Movie & {
@@ -63,20 +69,12 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
           <DataTableColumnHeader column={column} title="Title" />
         ),
         cell: ({ row }) => (
-          <div className="flex flex-col">
-            <Link
-              href={`/movie-details/${row.original.id}`}
-              className="decoration-primary hover:underline"
-            >
-              {row.original.title}
-            </Link>
-            <time
-              className="text-sm text-muted-foreground"
-              dateTime={row.original.createdAt!}
-            >
-              {getReadableDate(row.original.createdAt!)}
-            </time>
-          </div>
+          <Link
+            href={`/movie-details/${row.original.id}`}
+            className="decoration-primary hover:underline"
+          >
+            {row.original.title}
+          </Link>
         ),
       }),
       movieNightColumnHelper.accessor("director", {
@@ -91,15 +89,27 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
             {row.original.director}
           </Link>
         ),
+        sortingFn: (rowA, rowB) => {
+          const lastNameA = rowA.original.director.split(" ").pop();
+          const lastNameB = rowB.original.director.split(" ").pop();
+          if (!lastNameA || !lastNameB) return 0;
+          return lastNameA.localeCompare(lastNameB);
+        },
       }),
       movieNightColumnHelper.accessor("user.firstName", {
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Picked By" />
+          <DataTableColumnHeader column={column} title="Rouzer" />
         ),
       }),
       movieNightColumnHelper.accessor("rouzies", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Rouzies" />
+        ),
+        enableSorting: false,
+      }),
+      movieNightColumnHelper.accessor("createdAt", {
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Date" />
         ),
       }),
     ],
@@ -113,17 +123,39 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+
+    initialState: {
+      pagination: {
+        pageSize: 20,
+        pageIndex: 0,
+      },
+      sorting: [
+        {
+          id: "createdAt",
+          desc: true,
+        },
+      ],
+    },
   });
 
-  const shownColumns = ["rouzies", "posterPath", "title", "director"];
+  const shownColumns = [
+    "rouzies",
+    "posterPath",
+    "title",
+    "director",
+    // "createdAt",
+  ];
   const shownColumnsSm = ["title", "user_firstName"];
 
   return (
     <>
       <CardHeader className="flex items-center  justify-between bg-muted/50 md:flex-row">
-        <div>
-          <CardTitle>Random quote</CardTitle>
-        </div>
+        <CardTitle>
+          Movies
+          <CardDescription>
+            {movies.length} movies and counting.
+          </CardDescription>
+        </CardTitle>
         <Input
           placeholder="Filter..."
           onChange={(event) =>
@@ -160,15 +192,10 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={
-                      cn("hidden", {
-                        "md:table-cell": shownColumns.includes(cell.column.id),
-                        "table-cell": shownColumnsSm.includes(cell.column.id),
-                      })
-
-                      // hiddenColumns.includes(cell.column.id) && "hidden",
-                      // "md:table-cell",
-                    }
+                    className={cn("hidden", {
+                      "md:table-cell": shownColumns.includes(cell.column.id),
+                      "table-cell": shownColumnsSm.includes(cell.column.id),
+                    })}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

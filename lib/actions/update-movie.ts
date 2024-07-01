@@ -5,6 +5,7 @@ import { action } from "./safe-action";
 import { InsertMovieSchema, movies } from "@/db/schema";
 import { db } from "@/db";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export const safeUpdateMovie = action(InsertMovieSchema, updateMovie);
 
@@ -19,4 +20,6 @@ async function updateMovie(movie: z.infer<typeof InsertMovieSchema>) {
     target: movies.id,
     set: movie,
   });
+
+  // revalidatePath("/admin-dashboard");
 }

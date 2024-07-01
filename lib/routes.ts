@@ -7,7 +7,7 @@ export const SearchMoviesSearchParams = z.object({
 });
 
 export const Routes = {
-  home: makeRoute(() => `/`, z.object({}), z.object({})),
+  home: makeRoute(() => `/`, z.object({})),
   searchMovies: makeRoute(
     () => `/search-movies`,
     z.object({}),
