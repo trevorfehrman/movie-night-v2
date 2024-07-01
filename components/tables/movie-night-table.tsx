@@ -100,6 +100,14 @@ export function MovieNightTable({ movies }: { movies: Movies }) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Rouzer" />
         ),
+        cell: ({ row }) => (
+          <Link
+            href={`/rouzer-details/${row.original.userId}`}
+            className="decoration-primary hover:underline"
+          >
+            {row.original.user.firstName}
+          </Link>
+        ),
       }),
       movieNightColumnHelper.accessor("rouzies", {
         header: ({ column }) => (

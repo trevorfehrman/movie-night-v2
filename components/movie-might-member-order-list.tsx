@@ -21,6 +21,7 @@ import { LayoutGroup, motion } from "framer-motion";
 import { Protect } from "@clerk/nextjs";
 import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
+import Link from "next/link";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -100,7 +101,12 @@ export function MovieNightMemberOrderList({
                     className="rounded-full"
                     alt={`Profile picture of ${user.firstName}`}
                   />
-                  <div>{user.firstName}</div>
+                  <Link
+                    className="decoration-primary hover:underline"
+                    href={`/rouzer-details/${user.id}`}
+                  >
+                    {user.firstName}
+                  </Link>
                 </div>
                 <Protect permission="org:movie:create">
                   <Button
