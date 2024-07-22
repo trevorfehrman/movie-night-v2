@@ -19,6 +19,16 @@ import { SelectUserSchema } from "@/db/schema";
 import { z } from "zod";
 
 export default async function Home() {
+  // const movies = await db.query.movies.findMany({
+  //   with: {
+  //     user: {
+  //       columns: {
+  //         firstName: true,
+  //       },
+  //     },
+  //   },
+  // });
+
   const movies = await db.query.movies.findMany({
     with: {
       user: {
