@@ -27,8 +27,8 @@ const nextConfig = {
         hostname: "www.gravatar.com",
       },
     ],
+    unoptimized: true,
   },
-  unoptimized: true,
 };
 
 export default withSentryConfig(
