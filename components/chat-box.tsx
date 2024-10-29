@@ -9,26 +9,35 @@ import { getReadableDateTime } from "@/lib/utils";
 
 export default function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
-  const bottomRef = React.useRef<HTMLLIElement>(null);
+  const chatContainerRef = React.useRef<HTMLUListElement>(null);
 
   React.useEffect(() => {
-    const channel = pusherClient
-      .subscribe("private-chat")
-      .bind("evt::main-chat", (data: unknown) => {
-        const validatedData = ChatMessageSchema.parse(data);
+    const channel = pusherClient.subscribe("private-chat");
 
-        setMessages([...messages, validatedData]);
-      });
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    channel.bind("evt::main-chat", (data: unknown) => {
+      const validatedData = ChatMessageSchema.parse(data);
+
+      setMessages((prevMessages) => [...prevMessages, validatedData]);
+    });
 
     return () => {
       channel.unbind();
     };
+  }, []);
+
+  React.useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   return (
     <>
-      <ul className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto">
+      <ul
+        className="flex max-h-96 min-h-96 flex-col gap-y-4 overflow-auto"
+        ref={chatContainerRef}
+      >
         {messages.map((message) => (
           <li
             key={message.id}
@@ -53,7 +62,6 @@ export default function ChatBox({ posts }: { posts: ChatMessages }) {
             </div>
           </li>
         ))}
-        <li ref={bottomRef} />
       </ul>
     </>
   );
