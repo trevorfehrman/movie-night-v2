@@ -19,16 +19,6 @@ import { SelectUserSchema } from "@/db/schema";
 import { z } from "zod";
 
 export default async function Home() {
-  // const movies = await db.query.movies.findMany({
-  //   with: {
-  //     user: {
-  //       columns: {
-  //         firstName: true,
-  //       },
-  //     },
-  //   },
-  // });
-
   const movies = await db.query.movies.findMany({
     with: {
       user: {
@@ -83,14 +73,15 @@ export default async function Home() {
   const validatedCursor = z.number().parse(cursor);
 
   // TODO: Obviously need a better way to deal with this
-  // const users = await db.query.users.findMany();
 
+  // const users = await db.query.users.findMany();
+  // const userz = users.map((user, idx) => ({ ...user, idx }));
   // const thing = await redis.zadd("movie_night_members", {
-  //   score: 14,
-  //   member: JSON.stringify({ ...users[14], score: 14 }),
+  //  score: 9,
+  //  member: JSON.stringify({ ...users[15], score: 9 }),
   // });
 
-  // console.log(users.length, users);
+  // console.log(userz, "hihihhihihihi");
 
   const SelectUsersWithScore = z.array(
     SelectUserSchema.extend({ score: z.number() }),
@@ -99,6 +90,8 @@ export default async function Home() {
   const validatedPosts = ChatMessagesSchema.parse(posts);
   const validatedMovieNightMembers =
     SelectUsersWithScore.parse(movieNightMembers);
+
+  console.log(validatedMovieNightMembers, "validated");
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">

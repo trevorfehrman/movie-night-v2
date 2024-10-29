@@ -67,7 +67,6 @@ export function MovieNightMemberOrderList({
     }
 
     channel.bind("evt::trigger-party", (data: unknown) => {
-      console.log("hihihihi");
       const validatedData = z.string().parse(data);
       playHorn();
       reward();
@@ -79,6 +78,12 @@ export function MovieNightMemberOrderList({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- play has an unstable reference so we don't include it here
   }, [cursor]);
+
+  React.useEffect(() => {
+    console.log(cursor, validatedCursor);
+  }, [cursor, validatedCursor]);
+
+  const rearrangedUsers = users.slice(cursor).concat(users.slice(0, cursor));
 
   return (
     <Card className="overflow-hidden">
@@ -112,48 +117,48 @@ export function MovieNightMemberOrderList({
       </CardHeader>
       <CardContent className="flex flex-col gap-y-4 p-6 text-sm">
         <LayoutGroup>
-          {users
-            .slice(cursor)
-            .concat(users.slice(0, cursor))
-            .map((user) => (
-              <motion.div
-                layout
-                transition={{
-                  type: "spring",
-                  stiffness: 250,
-                  damping: 20,
-                }}
-                className="flex items-center justify-between"
-                key={user.id}
-              >
-                <div className="flex items-center gap-x-2">
-                  <ImageWithFallback
-                    src={user.imgUrl}
-                    height={40}
-                    width={40}
-                    className="rounded-full"
-                    alt={`Profile picture of ${user.firstName}`}
-                  />
-                  <Link
-                    className="decoration-primary hover:underline"
-                    href={`/rouzer-details/${user.id}`}
-                  >
-                    {user.firstName}
-                  </Link>
-                </div>
-                <Protect permission="org:movie:create">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => safeCursor.execute({ cursor: user.score })}
-                    className="size-8"
-                    aria-label="Move up"
-                  >
-                    <MoveUp className="size-4" />
-                  </Button>
-                </Protect>
-              </motion.div>
-            ))}
+          {rearrangedUsers.map((user) => (
+            <motion.div
+              layout
+              transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 20,
+              }}
+              className="flex items-center justify-between"
+              key={user.id}
+            >
+              <div className="flex items-center gap-x-2">
+                <ImageWithFallback
+                  src={user.imgUrl}
+                  height={40}
+                  width={40}
+                  className="rounded-full"
+                  alt={`Profile picture of ${user.firstName}`}
+                />
+                <Link
+                  className="decoration-primary hover:underline"
+                  href={`/rouzer-details/${user.id}`}
+                >
+                  {user.firstName}
+                </Link>
+              </div>
+              <Protect permission="org:movie:create">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    safeCursor.execute({ cursor: user.score });
+                    setCursor(user.score);
+                  }}
+                  className="size-8"
+                  aria-label="Move up"
+                >
+                  <MoveUp className="size-4" />
+                </Button>
+              </Protect>
+            </motion.div>
+          ))}
         </LayoutGroup>
       </CardContent>
       <CardFooter className="flex items-center border-t bg-muted/50 px-6 py-3">
