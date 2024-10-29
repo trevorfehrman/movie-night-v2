@@ -34,13 +34,14 @@ export default function ChatBox({ posts }: { posts: ChatMessages }) {
             key={message.id}
             className="flex gap-x-4 px-6 py-2 hover:bg-muted/50"
           >
-            <ImageWithFallback
-              src={message.imgUrl}
-              height={30}
-              width={30}
-              className="h-fit w-fit rounded-full"
-              alt={`Profile picture of ${message.userFirstName}`}
-            />
+            <div className="relative size-8">
+              <ImageWithFallback
+                src={message.imgUrl}
+                className="h-fit w-fit rounded-full"
+                alt={`Profile picture of ${message.userFirstName}`}
+                fill
+              />
+            </div>
             <div>
               <div className="flex items-center gap-x-2">
                 <p className="font-semibold">{message.userFirstName}</p>
