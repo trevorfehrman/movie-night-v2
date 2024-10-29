@@ -226,7 +226,6 @@ function AdminMovieRow({
   });
 
   function onSubmit(values: z.infer<typeof EditableMovieDetailsSchema>) {
-    console.log(values);
     execute({ ...row.original, ...values });
   }
 

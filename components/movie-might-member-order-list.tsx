@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import useSound from "use-sound";
-import { useReward } from "react-rewards";
 import { ImageWithFallback } from "./image-with-fallback";
 import {
   Card,
@@ -19,11 +18,10 @@ import { pusherClient } from "@/lib/pusher/client";
 import { z } from "zod";
 
 import { LayoutGroup, motion } from "framer-motion";
-import { Protect, useUser } from "@clerk/nextjs";
-import { MoveUp, PartyPopper } from "lucide-react";
+import { Protect } from "@clerk/nextjs";
+import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
-import { safeTriggerParty } from "@/lib/actions/trigger-party";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -37,18 +35,9 @@ export function MovieNightMemberOrderList({
   validatedCursor: number;
 }) {
   const safeCursor = useAction(safeSetCursor);
-  const safeParty = useAction(safeTriggerParty);
   const isInitialMount = React.useRef(true); // Create a ref to track the initial mount
-  const { user } = useUser();
 
   const [playBoing] = useSound("/boing.mp3");
-  const [playHorn] = useSound("/air-horn.mp3");
-
-  const { reward } = useReward("rewardId", "confetti", {
-    angle: 180,
-    elementCount: 300,
-    colors: ["#facc15", "#fafaf9"],
-  });
 
   const [cursor, setCursor] = React.useState(validatedCursor);
   const [isBoingEnabled, setIsBoingEnabled] = React.useState(false);
@@ -66,22 +55,11 @@ export function MovieNightMemberOrderList({
       isBoingEnabled && playBoing();
     }
 
-    channel.bind("evt::trigger-party", (data: unknown) => {
-      const validatedData = z.string().parse(data);
-      playHorn();
-      reward();
-      console.log(validatedData);
-    });
-
     return () => {
       channel.unbind();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- play has an unstable reference so we don't include it here
   }, [cursor]);
-
-  React.useEffect(() => {
-    console.log(cursor, validatedCursor);
-  }, [cursor, validatedCursor]);
 
   const rearrangedUsers = users.slice(cursor).concat(users.slice(0, cursor));
 
@@ -91,20 +69,6 @@ export function MovieNightMemberOrderList({
         <div className="grid gap-0.5">
           <CardTitle className="flex items-center gap-2 text-lg">
             Whose turn is it
-            {user && (
-              <Button
-                id="rewardId"
-                size="icon"
-                className="size-8"
-                onClick={() => {
-                  if (user?.firstName) {
-                    safeParty.execute({ rouzer: user.firstName });
-                  }
-                }}
-              >
-                <PartyPopper className="size-4" />
-              </Button>
-            )}
           </CardTitle>
           <CardDescription>
             {Intl.DateTimeFormat("en-US", {
