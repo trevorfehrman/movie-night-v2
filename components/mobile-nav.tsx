@@ -1,6 +1,6 @@
 "use client";
 
-import { Film, PanelLeft, Search, UserCog } from "lucide-react";
+import { Film, LoaderPinwheel, PanelLeft, Search, UserCog } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Link from "next/link";
@@ -47,6 +47,21 @@ export function MobileNav() {
               )}
             />
             Search
+          </Link>
+          <Link
+            href={Routes.spinner()}
+            className={cn(
+              "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
+              pathname === "/spinner" && "text-foreground",
+            )}
+          >
+            <LoaderPinwheel
+              className={cn(
+                "h-5 w-5",
+                pathname === "/spinner" && "text-primary",
+              )}
+            />
+            Spinner
           </Link>
           <Protect permission="org:movie:create">
             <Link

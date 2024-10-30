@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "Prize 1", color: "#FF6B6B" },
-    { id: 2, text: "Prize 2", color: "#4ECDC4" },
-    { id: 3, text: "Prize 3", color: "#45B7D1" },
-    { id: 4, text: "Prize 4", color: "#96CEB4" },
-    { id: 5, text: "Prize 5", color: "#FFEEAD" },
-    { id: 6, text: "Prize 6", color: "#D4A5A5" },
+    { id: 1, text: "Prize 1", color: "#262626" },
+    { id: 2, text: "Prize 2", color: "#333333" },
+    { id: 3, text: "Prize 3", color: "#404040" },
+    { id: 4, text: "Prize 4", color: "#525252" },
+    { id: 5, text: "Prize 5", color: "#666666" },
+    { id: 6, text: "Prize 6", color: "#737373" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -89,9 +89,10 @@ export function Spinner({
       return (
         <g key={segment.id}>
           <path
+            suppressHydrationWarning
             d={pathData}
             fill={segment.color}
-            stroke="white"
+            stroke="black"
             strokeWidth="2"
           />
           <text
@@ -218,6 +219,63 @@ export function Spinner({
     }
   }
 
+  // Add touch event handlers
+  function handleTouchStart(e: React.TouchEvent) {
+    if (!wheelRef.current) return;
+    e.preventDefault(); // Prevent scrolling while touching the wheel
+
+    stopSpinning();
+
+    setIsDragging(true);
+    const touch = e.touches[0];
+    const rect = wheelRef.current.getBoundingClientRect();
+    const center = {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    };
+    const point = { x: touch.clientX, y: touch.clientY };
+    setStartAngle(getAngle(center, point) - rotation.get());
+
+    // Reset velocity tracking
+    velocityRef.current = 0;
+    lastMousePosRef.current = point;
+    lastUpdateTimeRef.current = Date.now();
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (!isDragging || !wheelRef.current) return;
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    const currentTime = Date.now();
+    const deltaTime = (currentTime - lastUpdateTimeRef.current) / 1000;
+    const center = getWheelCenter(wheelRef.current);
+    const point = { x: touch.clientX, y: touch.clientY };
+    const currentAngle = getAngle(center, point);
+    const newRotation = currentAngle - startAngle;
+
+    // Calculate angular velocity
+    const prevAngle = getAngle(center, lastMousePosRef.current);
+    let angleDelta = currentAngle - prevAngle;
+
+    // Handle angle wrapping
+    if (angleDelta > 180) angleDelta -= 360;
+    if (angleDelta < -180) angleDelta += 360;
+
+    // Update velocity with dampening factor
+    velocityRef.current = (angleDelta / deltaTime) * VELOCITY_DAMPENING;
+
+    // Update references
+    lastMousePosRef.current = point;
+    lastUpdateTimeRef.current = currentTime;
+
+    rotation.set(newRotation);
+  }
+
+  function handleTouchEnd() {
+    handleMouseUp(); // Reuse existing mouse up logic
+  }
+
   return (
     <div className="relative mx-auto w-full max-w-md select-none">
       <motion.div
@@ -235,7 +293,10 @@ export function Spinner({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
-        className={`cursor-grab ${isDragging ? "cursor-grabbing" : ""} [backface-visibility:hidden] [transform-style:preserve-3d]`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className={`cursor-grab touch-none ${isDragging ? "cursor-grabbing" : ""} [backface-visibility:hidden] [transform-style:preserve-3d]`}
       >
         <svg
           viewBox="-155 -155 310 310"
