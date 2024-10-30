@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { Film, Search, UserCog } from "lucide-react";
+import { Film, Search, UserCog, LoaderPinwheel } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/lib/routes";
@@ -47,6 +47,23 @@ export function Nav() {
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Search Movies</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href={Routes.spinner()}
+              className={cn(
+                "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground outline-ring md:h-8 md:w-8 md:text-base",
+                pathname === "/spinner"
+                  ? "bg-primary"
+                  : "text-muted-foreground transition-colors hover:text-foreground",
+              )}
+            >
+              <LoaderPinwheel className="h-5 w-5" />
+              <span className="sr-only">Spinner</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Spinner</TooltipContent>
         </Tooltip>
         <Protect permission="org:movie:create">
           <Tooltip>

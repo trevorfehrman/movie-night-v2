@@ -19,6 +19,16 @@ import { SelectUserSchema } from "@/db/schema";
 import { z } from "zod";
 
 export default async function Home() {
+  // const movies = await db.query.movies.findMany({
+  //   with: {
+  //     user: {
+  //       columns: {
+  //         firstName: true,
+  //       },
+  //     },
+  //   },
+  // });
+
   const movies = await db.query.movies.findMany({
     with: {
       user: {
@@ -74,10 +84,13 @@ export default async function Home() {
 
   // TODO: Obviously need a better way to deal with this
   // const users = await db.query.users.findMany();
+
   // const thing = await redis.zadd("movie_night_members", {
-  //  score: 9,
-  //  member: JSON.stringify({ ...users[15], score: 9 }),
+  //   score: 14,
+  //   member: JSON.stringify({ ...users[14], score: 14 }),
   // });
+
+  // console.log(users.length, users);
 
   const SelectUsersWithScore = z.array(
     SelectUserSchema.extend({ score: z.number() }),

@@ -26,4 +26,5 @@ export const Routes = {
     z.object({ rouzerId: z.string() }),
   ),
   adminDashboard: makeRoute(() => `/admin-dashboard`),
+  spinner: makeRoute(() => `/spinner`),
 };
