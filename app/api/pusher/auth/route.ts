@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 const pusherServer = getPusherInstance();
 
 export async function POST(req: Request) {
-  const { userId: clerkUserId, orgId, has } = auth();
+  const { userId: clerkUserId, orgId, has } = await auth();
   if (!clerkUserId || !orgId || !has({ permission: "org:movie:create" })) {
     return new Response("Unauthorized", { status: 401 });
   }

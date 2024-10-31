@@ -8,7 +8,6 @@ export const env = createEnv({
     TURSO_AUTH_TOKEN: z.string().min(1),
     WEBHOOK_SECRET: z.string().min(1),
     TMDB_ACCESS_TOKEN: z.string().min(1),
-    SENTRY_AUTH_TOKEN: z.string().min(1),
     PUSHER_APP_ID: z.string().min(1),
     PUSHER_SECRET: z.string().min(1),
     UPSTASH_KAFKA_REST_URL: z.string().min(1),

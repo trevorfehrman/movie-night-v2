@@ -15,7 +15,7 @@ export const safeAddMovie = action(
 );
 
 async function addMovie(movieDetails: MovieDetails & { userId: string }) {
-  const { userId: clerkUserId, orgId, has } = auth();
+  const { userId: clerkUserId, orgId, has } = await auth();
 
   if (!clerkUserId || !orgId || !has({ permission: "org:movie:create" })) {
     return;

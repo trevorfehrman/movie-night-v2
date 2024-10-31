@@ -22,6 +22,7 @@ import { Protect } from "@clerk/nextjs";
 import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
+import { Tsukimi_Rounded } from "next/font/google";
 
 type UserWithScore = Awaited<
   ReturnType<typeof db.query.users.findMany>
@@ -89,6 +90,7 @@ export function MovieNightMemberOrderList({
                 stiffness: 250,
                 damping: 20,
               }}
+              // @ts-ignore - yes it does?
               className="flex items-center justify-between"
               key={user.id}
             >

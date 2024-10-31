@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 export const safeUpdateMovie = action(InsertMovieSchema, updateMovie);
 
 async function updateMovie(movie: z.infer<typeof InsertMovieSchema>) {
-  const { userId: clerkUserId, orgId, has } = auth();
+  const { userId: clerkUserId, orgId, has } = await auth();
 
   if (!clerkUserId || !orgId || !has({ permission: "org:movie:create" })) {
     return;

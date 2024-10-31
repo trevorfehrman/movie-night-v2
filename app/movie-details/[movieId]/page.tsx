@@ -31,13 +31,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 type MovieSearchPageProps = {
-  params: typeof Routes.movieDetails.params;
+  params: Promise<typeof Routes.movieDetails.params>;
 };
 
 export default async function Page({ params }: MovieSearchPageProps) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
-  const movieDetails = await getMovieDetails({ movieId: params.movieId });
+  const { movieId } = await params;
+
+  const movieDetails = await getMovieDetails({ movieId });
   const readableDate = getReadableDate(movieDetails?.release_date ?? "");
   const trailerId = getTrailerId(movieDetails?.videos.results);
 
