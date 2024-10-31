@@ -25,7 +25,7 @@ async function addChatMessage({
   userFirstName?: string | null;
   imgUrl?: string;
 }) {
-  const { userId: clerkUserId, orgId, has } = auth();
+  const { userId: clerkUserId, orgId, has } = await auth();
 
   if (
     !clerkUserId ||

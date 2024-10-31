@@ -14,7 +14,7 @@ export const safeSetCursor = action(CursorSchema, setCursor);
 const pusherServer = getPusherInstance();
 
 async function setCursor({ cursor }: { cursor: number }) {
-  const { userId: clerkUserId, orgId, has } = auth();
+  const { userId: clerkUserId, orgId, has } = await auth();
 
   if (!clerkUserId || !orgId || !has({ permission: "org:movie:create" })) {
     console.log("no clerkUserId, orgId, or userFirstName");

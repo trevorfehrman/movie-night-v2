@@ -35,7 +35,7 @@ type MovieSearchPageProps = {
 };
 
 export default async function Page({ params }: MovieSearchPageProps) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   const movieDetails = await getMovieDetails({ movieId: params.movieId });
   const readableDate = getReadableDate(movieDetails?.release_date ?? "");
