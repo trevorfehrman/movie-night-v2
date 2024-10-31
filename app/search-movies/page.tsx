@@ -15,12 +15,13 @@ import { getBase64 } from "@/lib/get-base-64";
 import { searchMovies } from "@/lib/tmdb/search-movies";
 
 type MovieSearchPageProps = {
-  searchParams: typeof Routes.searchMovies.searchParams;
+  searchParams: Promise<typeof Routes.searchMovies.searchParams>;
 };
 
 export default async function SearchMoviesPage({
-  searchParams: { query, page },
+  searchParams,
 }: MovieSearchPageProps) {
+  const { query, page } = await searchParams;
   const movies = await searchMovies({ query, page });
   const posterPaths = movies?.results.map((movie) => movie.poster_path) || [];
   const posterPathPromises = posterPaths.map((posterPath) =>
