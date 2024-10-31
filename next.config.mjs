@@ -1,11 +1,4 @@
 /** @type {import('next').NextConfig} */
-// import { fileURLToPath } from "node:url";
-
-// Needed for t3-env
-// import createJiti from "jiti";
-
-// const jiti = createJiti(fileURLToPath(import.meta.url));
-// jiti("./env.ts");
 
 const nextConfig = {
   images: {

@@ -12,15 +12,16 @@ import { db } from "@/db";
 import { Routes } from "@/lib/routes";
 
 type RouzerDetailsPageProps = {
-  params: typeof Routes.rouzerDetails.params;
+  params: Promise<typeof Routes.rouzerDetails.params>;
 };
 export default async function Page({ params }: RouzerDetailsPageProps) {
+  const { rouzerId } = await params;
   const rouzerDetails = await db.query.users.findFirst({
-    where: (user, { eq }) => eq(user.id, params.rouzerId),
+    where: (user, { eq }) => eq(user.id, rouzerId),
   });
 
   const rouzerMovies = await db.query.movies.findMany({
-    where: (movie, { eq }) => eq(movie.userId, params.rouzerId),
+    where: (movie, { eq }) => eq(movie.userId, rouzerId),
     with: {
       user: {
         columns: {

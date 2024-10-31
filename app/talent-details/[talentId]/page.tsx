@@ -19,10 +19,11 @@ import { TalentCastTable } from "@/components/tables/talent-cast-table";
 import { TalentCrewTable } from "@/components/tables/talent-crew-table";
 
 type TalentDetailsPageProps = {
-  params: typeof Routes.talentDetails.params;
+  params: Promise<typeof Routes.talentDetails.params>;
 };
 export default async function Page({ params }: TalentDetailsPageProps) {
-  const talentDetails = await getTalentDetails({ talentId: params.talentId });
+  const { talentId } = await params;
+  const talentDetails = await getTalentDetails({ talentId });
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       {talentDetails && (
