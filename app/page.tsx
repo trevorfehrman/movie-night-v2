@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
-const ChatBox = dynamic(() => import("@/components/chat-box"), { ssr: false });
 import { ChatInput } from "@/components/chat-input";
 import { MovieNightTable } from "@/components/tables/movie-night-table";
 import {
@@ -17,6 +15,7 @@ import { Protect } from "@clerk/nextjs";
 import { MovieNightMemberOrderList } from "@/components/movie-might-member-order-list";
 import { SelectUserSchema } from "@/db/schema";
 import { z } from "zod";
+import { ChatBox } from "@/components/chat-box";
 
 export default async function Home() {
   // const movies = await db.query.movies.findMany({

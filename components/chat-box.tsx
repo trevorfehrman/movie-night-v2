@@ -7,7 +7,7 @@ import { ImageWithFallback } from "./image-with-fallback";
 import { CardDescription } from "./ui/card";
 import { getReadableDateTime } from "@/lib/utils";
 
-export default function ChatBox({ posts }: { posts: ChatMessages }) {
+export function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
   const chatContainerRef = React.useRef<HTMLUListElement>(null);
 
