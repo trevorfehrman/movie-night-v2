@@ -61,7 +61,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronsDown } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 
@@ -230,26 +230,27 @@ function AdminMovieRow({
   }
 
   return (
-    <Collapsible key={row.id} asChild>
-      <>
-        <TableRow key={row.id} className="cursor-pointer">
-          {row.getVisibleCells().map((cell) => (
-            <CollapsibleTrigger key={cell.id} asChild>
-              <TableCell
-                key={cell.id}
-                className={cn("hidden", {
-                  "md:table-cell": shownColumns.includes(cell.column.id),
-                  "table-cell": shownColumnsSm.includes(cell.column.id),
-                })}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
+    <>
+      <TableRow className="cursor-pointer">
+        {row.getVisibleCells().map((cell) => (
+          <TableCell
+            key={cell.id}
+            className={cn("hidden", {
+              "md:table-cell": shownColumns.includes(cell.column.id),
+              "table-cell": shownColumnsSm.includes(cell.column.id),
+            })}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+      <TableRow>
+        <TableCell colSpan={5}>
+          <Collapsible>
+            <CollapsibleTrigger>
+              <ChevronsDown />
             </CollapsibleTrigger>
-          ))}
-        </TableRow>
-        <CollapsibleContent asChild>
-          <TableRow className="bg-muted/50">
-            <TableCell colSpan={6}>
+            <CollapsibleContent>
               <Card>
                 <CardHeader>
                   <CardTitle>
@@ -372,10 +373,10 @@ function AdminMovieRow({
                 </CardContent>
                 <CardFooter></CardFooter>
               </Card>
-            </TableCell>
-          </TableRow>
-        </CollapsibleContent>
-      </>
-    </Collapsible>
+            </CollapsibleContent>
+          </Collapsible>
+        </TableCell>
+      </TableRow>
+    </>
   );
 }
