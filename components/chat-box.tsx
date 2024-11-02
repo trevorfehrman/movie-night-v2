@@ -55,7 +55,7 @@ export function ChatBox({ posts }: { posts: ChatMessages }) {
               <div className="flex items-center gap-x-2">
                 <p className="font-semibold">{message.userFirstName}</p>
                 <CardDescription>
-                  {getReadableDateTime(message.createdAt)}
+                  {/* {getReadableDateTime(message.createdAt)} */}
                 </CardDescription>
               </div>
               <p className="text-sm">{message.message}</p>

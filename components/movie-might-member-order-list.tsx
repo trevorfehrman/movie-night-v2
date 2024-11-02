@@ -5,7 +5,7 @@ import { ImageWithFallback } from "./image-with-fallback";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -42,17 +42,17 @@ export function MovieNightMemberOrderList({
   const [cursor, setCursor] = React.useState(validatedCursor);
   const [isBoingEnabled, setIsBoingEnabled] = React.useState(false);
 
-  const [date, setDate] = React.useState("");
+  // const [date, setDate] = React.useState("");
 
-  React.useEffect(() => {
-    setDate(
-      Intl.DateTimeFormat("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-      }).format(new Date()),
-    );
-  }, []);
+  // React.useEffect(() => {
+  //   setDate(
+  //     Intl.DateTimeFormat("en-US", {
+  //       weekday: "long",
+  //       month: "long",
+  //       day: "numeric",
+  //     }).format(new Date()),
+  //   );
+  // }, []);
 
   React.useEffect(() => {
     const channel = pusherClient.subscribe("movie_night_members");
@@ -82,7 +82,7 @@ export function MovieNightMemberOrderList({
           <CardTitle className="flex items-center gap-2 text-lg">
             Whose turn is it
           </CardTitle>
-          <CardDescription>{date}</CardDescription>
+          {/* <CardDescription>{date}</CardDescription> */}
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-y-4 p-6 text-sm">
