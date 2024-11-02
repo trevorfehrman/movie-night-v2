@@ -16,11 +16,6 @@ import { MovieNightMemberOrderList } from "@/components/movie-might-member-order
 import { SelectUserSchema } from "@/db/schema";
 import { z } from "zod";
 import { ChatBox } from "@/components/chat-box";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 export default async function Home() {
   // const movies = await db.query.movies.findMany({
