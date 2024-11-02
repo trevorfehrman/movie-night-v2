@@ -5,7 +5,7 @@ import { pusherClient } from "@/lib/pusher/client";
 import { ChatMessageSchema, ChatMessages } from "@/lib/schemas/chat";
 import { ImageWithFallback } from "./image-with-fallback";
 import { CardDescription } from "./ui/card";
-// import { getReadableDateTime } from "@/lib/utils";
+import { ChatBoxDate } from "./chat-box.date";
 
 export function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
@@ -55,7 +55,7 @@ export function ChatBox({ posts }: { posts: ChatMessages }) {
               <div className="flex items-center gap-x-2">
                 <p className="font-semibold">{message.userFirstName}</p>
                 <CardDescription>
-                  {/* {getReadableDateTime(message.createdAt)} */}
+                  <ChatBoxDate date={message.createdAt} />
                 </CardDescription>
               </div>
               <p className="text-sm">{message.message}</p>
