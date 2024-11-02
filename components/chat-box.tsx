@@ -5,7 +5,7 @@ import { pusherClient } from "@/lib/pusher/client";
 import { ChatMessageSchema, ChatMessages } from "@/lib/schemas/chat";
 import { ImageWithFallback } from "./image-with-fallback";
 import { CardDescription } from "./ui/card";
-import { getReadableDateTime } from "@/lib/utils";
+// import { getReadableDateTime } from "@/lib/utils";
 
 export function ChatBox({ posts }: { posts: ChatMessages }) {
   const [messages, setMessages] = React.useState(posts);
