@@ -289,7 +289,7 @@ export function Spinner({
           transform: "translate3d(0,0,0)",
           WebkitTransform: "translate3d(0,0,0)",
         }}
-        // @ts-ignore -- TODO: Fix this type error
+        // @ts-expect-error -- TODO: Fix this type error
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
