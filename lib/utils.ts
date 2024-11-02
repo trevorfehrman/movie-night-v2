@@ -24,20 +24,28 @@ export function getReadableDate(date: string) {
 }
 
 export function getReadableDateTime(date: string) {
+  if (!date) return "";
+
   try {
     const dateObj = new Date(date);
-    return date
-      ? new Intl.DateTimeFormat("en-US", {
-          // year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false, // Use 24-hour time without AM/PM
-        }).format(dateObj)
-      : "";
+
+    // Ensure the date is valid
+    if (isNaN(dateObj.getTime())) {
+      return "";
+    }
+
+    // Use more explicit options to ensure consistency
+    return new Intl.DateTimeFormat("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "UTC", // Add this to ensure consistent timezone handling
+    }).format(dateObj);
   } catch (e) {
     console.error(e);
+    return ""; // Ensure there's always a return value
   }
 }
 
