@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "Prize 1", color: "#262626" },
-    { id: 2, text: "Prize 2", color: "#333333" },
-    { id: 3, text: "Prize 3", color: "#404040" },
-    { id: 4, text: "Prize 4", color: "#525252" },
-    { id: 5, text: "Prize 5", color: "#666666" },
-    { id: 6, text: "Prize 6", color: "#737373" },
+    { id: 1, text: "Trading Places", color: "#FF0000" },
+    { id: 2, text: "Scrooged", color: "#00FF00" },
+    { id: 3, text: "Meet me in St. Louis", color: "#FF0000" },
+    { id: 4, text: "Home Alone", color: "#00FF00" },
+    { id: 5, text: "The Silent Partner", color: "#FF0000" },
+    { id: 6, text: "Gremlins", color: "#00FF00" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
