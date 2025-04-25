@@ -149,7 +149,12 @@ export async function getMovieDetails({ movieId }: { movieId?: string }) {
     "append_to_response",
     "credits,videos,keywords,watch/providers",
   );
-  const response = await fetch(movieDetailsUrl, options);
+  const response = await fetch(movieDetailsUrl, {
+    ...options,
+    next: {
+      revalidate: 60 * 60 * 24,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(response.statusText);

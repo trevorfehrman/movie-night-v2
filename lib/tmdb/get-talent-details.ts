@@ -68,7 +68,12 @@ export async function getTalentDetails({ talentId }: { talentId?: string }) {
 
   talentDetailsUrl.searchParams.set("append_to_response", "movie_credits");
 
-  const response = await fetch(talentDetailsUrl, options);
+  const response = await fetch(talentDetailsUrl, {
+    ...options,
+    next: {
+      revalidate: 60 * 60 * 24,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(response.statusText);
