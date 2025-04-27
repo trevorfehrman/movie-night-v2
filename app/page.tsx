@@ -18,16 +18,6 @@ import { z } from "zod";
 import { ChatBox } from "@/components/chat-box";
 
 export default async function Home() {
-  // const movies = await db.query.movies.findMany({
-  //   with: {
-  //     user: {
-  //       columns: {
-  //         firstName: true,
-  //       },
-  //     },
-  //   },
-  // });
-
   const movies = await db.query.movies.findMany({
     with: {
       user: {
