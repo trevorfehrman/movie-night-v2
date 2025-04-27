@@ -9,7 +9,6 @@ export default defineConfig({
   out: "./migrations",
   dialect: "turso",
   dbCredentials: {
-    // @ts-expect-error -- idk why this type is wrong but it is.
     url: env.TURSO_CONNECTION_URL,
     authToken: env.TURSO_AUTH_TOKEN,
   },
