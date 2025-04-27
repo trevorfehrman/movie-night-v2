@@ -23,6 +23,8 @@ const aj = arcjet({
   ],
 });
 
+// Testing
+
 // Define the routes that should be protected
 const isProtectedRoute = createRouteMatcher([
   "/movie-details/(.*)",
