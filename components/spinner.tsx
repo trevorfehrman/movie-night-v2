@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "Trading Places", color: "#FF0000" },
-    { id: 2, text: "Scrooged", color: "#00FF00" },
-    { id: 3, text: "Meet me in St. Louis", color: "#FF0000" },
-    { id: 4, text: "Home Alone", color: "#00FF00" },
-    { id: 5, text: "The Silent Partner", color: "#FF0000" },
-    { id: 6, text: "Gremlins", color: "#00FF00" },
+    { id: 1, text: "Past Lives", color: "#404040" },
+    { id: 2, text: "Grey Gardens", color: "#E0E0E0" },
+    { id: 3, text: "Past Lives", color: "#404040" },
+    { id: 4, text: "Grey Gardens", color: "#E0E0E0" },
+    { id: 5, text: "Past Lives", color: "#404040" },
+    { id: 6, text: "Grey Gardens", color: "#E0E0E0" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -98,10 +98,10 @@ export function Spinner({
           <text
             transform={`
               rotate(${startAngle + SEGMENT_ANGLE / 2})
-              translate(75, 0)
+              translate(100, 0)
               rotate(90)
             `}
-            fill="white"
+            fill="black"
             fontSize="14"
             fontWeight="bold"
             textAnchor="middle"
