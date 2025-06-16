@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   motion,
   useMotionValue,
@@ -31,6 +31,9 @@ export function Spinner({
   const rotation = useMotionValue(0);
   const [startAngle, setStartAngle] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedSegment, setSelectedSegment] = useState<SpinnerSegment>(
+    segments[0],
+  );
   const velocityRef = useRef(0);
   const lastMousePosRef = useRef({ x: 0, y: 0 });
   const lastUpdateTimeRef = useRef(Date.now());
@@ -42,6 +45,33 @@ export function Spinner({
   const MIN_ROTATIONS = 1;
   const MAX_ROTATIONS = 5;
   const VELOCITY_DAMPENING = 0.5;
+
+  // Calculate which segment is currently selected based on rotation
+  const calculateSelectedSegment = useCallback(
+    (currentRotation: number) => {
+      // Normalize rotation to 0-360 range
+      const normalizedRotation = ((currentRotation % 360) + 360) % 360;
+
+      // The indicator points to the top (270 degrees in our coordinate system)
+      // We need to account for the rotation offset
+      const indicatorAngle = (270 - normalizedRotation + 360) % 360;
+
+      // Find which segment this angle falls into
+      const segmentIndex = Math.floor(indicatorAngle / SEGMENT_ANGLE);
+
+      return segments[segmentIndex] || segments[0];
+    },
+    [segments, SEGMENT_ANGLE],
+  );
+
+  // Update selected segment helper
+  const updateSelectedSegment = useCallback(
+    (currentRotation: number) => {
+      const selected = calculateSelectedSegment(currentRotation);
+      setSelectedSegment(selected);
+    },
+    [calculateSelectedSegment],
+  );
 
   function getWheelCenter(wheel: HTMLDivElement) {
     const rect = wheel.getBoundingClientRect();
@@ -181,6 +211,7 @@ export function Spinner({
     lastUpdateTimeRef.current = currentTime;
 
     rotation.set(newRotation);
+    updateSelectedSegment(newRotation);
   }
 
   function handleMouseUp() {
@@ -206,9 +237,13 @@ export function Spinner({
     currentAnimationRef.current = animate(rotation, targetRotation, {
       duration: spinDuration,
       ease: [0.32, 0.72, 0.35, 1.0],
+      onUpdate: (currentRotation) => {
+        updateSelectedSegment(currentRotation);
+      },
       onComplete: () => {
         velocityRef.current = 0;
         currentAnimationRef.current = null;
+        updateSelectedSegment(targetRotation);
       },
     });
   }
@@ -270,6 +305,7 @@ export function Spinner({
     lastUpdateTimeRef.current = currentTime;
 
     rotation.set(newRotation);
+    updateSelectedSegment(newRotation);
   }
 
   function handleTouchEnd() {
@@ -278,38 +314,61 @@ export function Spinner({
 
   return (
     <div className="relative mx-auto w-full max-w-md select-none">
-      <motion.div
-        ref={wheelRef}
-        style={{
-          rotate: rotation,
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-          willChange: "transform",
-          perspective: "1000px",
-          transform: "translate3d(0,0,0)",
-          WebkitTransform: "translate3d(0,0,0)",
-        }}
-        // @ts-expect-error -- TODO: Fix this type error
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className={`cursor-grab touch-none ${isDragging ? "cursor-grabbing" : ""} [backface-visibility:hidden] [transform-style:preserve-3d]`}
-      >
-        <svg
-          viewBox="-155 -155 310 310"
-          className="h-full w-full"
+      {/* Spinner Wheel */}
+      <div className="relative">
+        <motion.div
+          ref={wheelRef}
           style={{
-            shapeRendering: "geometricPrecision",
-            textRendering: "geometricPrecision",
+            rotate: rotation,
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            willChange: "transform",
+            perspective: "1000px",
+            transform: "translate3d(0,0,0)",
+            WebkitTransform: "translate3d(0,0,0)",
+          }}
+          // @ts-expect-error -- TODO: Fix this type error
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className={`cursor-grab touch-none ${isDragging ? "cursor-grabbing" : ""} [backface-visibility:hidden] [transform-style:preserve-3d]`}
+        >
+          <svg
+            viewBox="-155 -155 310 310"
+            className="h-full w-full"
+            style={{
+              shapeRendering: "geometricPrecision",
+              textRendering: "geometricPrecision",
+            }}
+          >
+            {createSegments()}
+          </svg>
+        </motion.div>
+
+        {/* Fixed Indicator Pointer */}
+        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2">
+          <div className="h-0 w-0 border-b-[20px] border-l-[12px] border-r-[12px] border-b-red-600 border-l-transparent border-r-transparent drop-shadow-md" />
+        </div>
+      </div>
+
+      {/* Selected Segment Display */}
+      <div className="mt-6 text-center">
+        <div className="mb-1 text-sm text-gray-600">Currently Selected:</div>
+        <div
+          className="flex min-h-[3rem] items-center justify-center rounded-lg border-2 px-4 py-2 text-xl font-bold transition-colors duration-200"
+          style={{
+            backgroundColor: selectedSegment?.color || "#f3f4f6",
+            borderColor: selectedSegment?.color || "#d1d5db",
+            color: selectedSegment?.color === "#404040" ? "white" : "black",
           }}
         >
-          {createSegments()}
-        </svg>
-      </motion.div>
+          {selectedSegment?.text || "No selection"}
+        </div>
+      </div>
     </div>
   );
 }
