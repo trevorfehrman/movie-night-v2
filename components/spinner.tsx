@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "national treasure", color: "#404040" },
-    { id: 2, text: "national treasure", color: "#E0E0E0" },
-    { id: 3, text: "national treasure", color: "#404040" },
-    { id: 4, text: "national treasure", color: "#E0E0E0" },
-    { id: 5, text: "national treasure", color: "#404040" },
-    { id: 6, text: "national treasure", color: "#E0E0E0" },
+    { id: 1, text: "National Treasure", color: "#404040" },
+    { id: 2, text: "National Treasure", color: "#E0E0E0" },
+    { id: 3, text: "National Treasure", color: "#404040" },
+    { id: 4, text: "National Treasure", color: "#E0E0E0" },
+    { id: 5, text: "National Treasure", color: "#404040" },
+    { id: 6, text: "National Treasure", color: "#E0E0E0" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -125,20 +125,34 @@ export function Spinner({
             stroke="black"
             strokeWidth="2"
           />
-          <text
+          <g
             transform={`
               rotate(${startAngle + SEGMENT_ANGLE / 2})
               translate(100, 0)
               rotate(90)
             `}
-            fill="black"
-            fontSize="14"
-            fontWeight="bold"
-            textAnchor="middle"
-            dominantBaseline="middle"
           >
-            {segment.text}
-          </text>
+            <text
+              fill="black"
+              fontSize="12"
+              fontWeight="bold"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              y="-6"
+            >
+              {segment.text.split(' ')[0]}
+            </text>
+            <text
+              fill="black"
+              fontSize="12"
+              fontWeight="bold"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              y="6"
+            >
+              {segment.text.split(' ')[1] || ''}
+            </text>
+          </g>
         </g>
       );
     });
@@ -327,7 +341,6 @@ export function Spinner({
             transform: "translate3d(0,0,0)",
             WebkitTransform: "translate3d(0,0,0)",
           }}
-          // @ts-expect-error -- TODO: Fix this type error
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}

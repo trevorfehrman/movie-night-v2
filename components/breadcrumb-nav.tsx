@@ -21,10 +21,10 @@ export function BreadcrumbNav() {
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
         {segmentPlusHome.map((segment, index) => {
-          let readableSegment = segment
+          let readableSegment: string | React.ReactElement = segment
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ") as string | JSX.Element;
+            .join(" ");
 
           const num = Number(readableSegment);
           if (!isNaN(num)) {

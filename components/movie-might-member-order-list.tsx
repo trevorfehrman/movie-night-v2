@@ -95,7 +95,6 @@ export function MovieNightMemberOrderList({
                 stiffness: 250,
                 damping: 20,
               }}
-              // @ts-expect-error - yes it does?
               className="flex items-center justify-between"
               key={user.id}
             >
