@@ -23,15 +23,25 @@ import { MoveUp } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import Link from "next/link";
 
-type UserWithScore = Awaited<
-  ReturnType<typeof db.query.users.findMany>
->[number] & { score: number };
+// Hardcoded order for movie night members
+const MOVIE_NIGHT_ORDER = [
+  "user_2fL7646NUZehIlBBu9bXtWYp5Co", // Trevor
+  "user_2gIJl8pMFFJj8cLUK1DFp6mWoTt", // Brad
+  "user_2gL4h2Zwvssb0qjQnsL8sHIOQb5", // Tony
+  "user_2gIfrx1feKiUjm4ymwWTMiKqxwz", // Jess
+  "user_2gL2pe2B9nTdzjlnMoUcx7OXzL6", // Meghan
+  "user_2gIGV9xmwe2yJYrVz9gGftyGbVB", // Andy
+  "user_2ifGHDhbizNNDwE3nvPLUQRxeCv", // Renee
+  "user_2gIJyxv5lCrz77xz24LiDXeAui5", // Michael
+];
+
+type User = Awaited<ReturnType<typeof db.query.users.findMany>>[number];
 
 export function MovieNightMemberOrderList({
-  validatedMovieNightMembers: users,
+  users: allUsers,
   validatedCursor,
 }: {
-  validatedMovieNightMembers: UserWithScore[];
+  users: User[];
   validatedCursor: number;
 }) {
   const safeCursor = useAction(safeSetCursor);
@@ -73,7 +83,15 @@ export function MovieNightMemberOrderList({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- play has an unstable reference so we don't include it here
   }, [cursor]);
 
-  const rearrangedUsers = users.slice(cursor).concat(users.slice(0, cursor));
+  // Filter users to only include those in MOVIE_NIGHT_ORDER and sort them
+  const orderedUsers = MOVIE_NIGHT_ORDER.map((userId) =>
+    allUsers.find((user) => user.id === userId),
+  ).filter(Boolean) as User[];
+
+  // Apply cursor rotation
+  const rearrangedUsers = orderedUsers
+    .slice(cursor)
+    .concat(orderedUsers.slice(0, cursor));
 
   return (
     <Card className="overflow-hidden">
@@ -119,8 +137,11 @@ export function MovieNightMemberOrderList({
                   variant="ghost"
                   size="icon"
                   onClick={() => {
-                    safeCursor.execute({ cursor: user.score });
-                    setCursor(user.score);
+                    const userIndex = orderedUsers.findIndex(
+                      (u) => u.id === user.id,
+                    );
+                    safeCursor.execute({ cursor: userIndex });
+                    setCursor(userIndex);
                   }}
                   className="size-8"
                   aria-label="Move up"

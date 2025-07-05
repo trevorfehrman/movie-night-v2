@@ -12,8 +12,7 @@ import { db } from "@/db";
 import { redis } from "@/lib/redis/server";
 import { ChatMessagesSchema } from "@/lib/schemas/chat";
 import { Protect } from "@clerk/nextjs";
-import { MovieNightMemberOrderList } from "@/components/movie-might-member-order-list";
-import { SelectUserSchema } from "@/db/schema";
+import { MovieNightMemberOrderList } from "@/components/movie-night-member-order-list";
 import { z } from "zod";
 import { ChatBox } from "@/components/chat-box";
 
@@ -67,27 +66,11 @@ export default async function Home() {
   }
 
   const posts = await redis.lrange("posts", -50, -1);
-  const movieNightMembers = await redis.zrange("movie_night_members", 0, -1);
   const cursor = await redis.get("cursor");
   const validatedCursor = z.number().parse(cursor);
-
-  // TODO: Obviously need a better way to deal with this
-  // const users = await db.query.users.findMany();
-
-  // const thing = await redis.zadd("movie_night_members", {
-  //   score: 14,
-  //   member: JSON.stringify({ ...users[14], score: 14 }),
-  // });
-
-  // console.log(users.length, users);
-
-  const SelectUsersWithScore = z.array(
-    SelectUserSchema.extend({ score: z.number() }),
-  );
+  const users = await db.query.users.findMany();
 
   const validatedPosts = ChatMessagesSchema.parse(posts);
-  const validatedMovieNightMembers =
-    SelectUsersWithScore.parse(movieNightMembers);
 
   return (
     <main className="grid w-full max-w-screen-2xl flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
@@ -98,7 +81,7 @@ export default async function Home() {
       </div>
       <div className="flex flex-col gap-y-4">
         <MovieNightMemberOrderList
-          validatedMovieNightMembers={validatedMovieNightMembers}
+          users={users}
           validatedCursor={validatedCursor}
         />
         <Card className="relative">
