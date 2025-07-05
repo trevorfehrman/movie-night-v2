@@ -25,14 +25,9 @@ async function addChatMessage({
   userFirstName?: string | null;
   imgUrl?: string;
 }) {
-  const { userId: clerkUserId, orgId, has } = await auth();
+  const { userId: clerkUserId, orgId } = await auth();
 
-  if (
-    !clerkUserId ||
-    !orgId ||
-    !has({ permission: "org:movie:create" }) ||
-    !userFirstName
-  ) {
+  if (!clerkUserId || !orgId || !userFirstName) {
     console.log("no clerkUserId, orgId, or userFirstName");
     return;
   }
