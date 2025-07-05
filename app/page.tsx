@@ -114,7 +114,7 @@ export default async function Home() {
             <ChatBox posts={validatedPosts} />
           </CardContent>
           <CardFooter className="flex min-h-10 items-center gap-4 border-t bg-muted/50 px-6 py-3">
-            <Protect permission="org:movie:create">
+            <Protect>
               <ChatInput />
             </Protect>
           </CardFooter>
