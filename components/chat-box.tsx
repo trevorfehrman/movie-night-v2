@@ -12,7 +12,7 @@ export function ChatBox({ posts }: { posts: ChatMessages }) {
   const chatContainerRef = React.useRef<HTMLUListElement>(null);
 
   React.useEffect(() => {
-    const channel = pusherClient.subscribe("private-chat");
+    const channel = pusherClient.subscribe("chat");
 
     channel.bind("evt::main-chat", (data: unknown) => {
       const validatedData = ChatMessageSchema.parse(data);

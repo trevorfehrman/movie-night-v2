@@ -48,11 +48,7 @@ async function addChatMessage({
 
   const validatedPayload = ChatMessageSchema.parse(payload);
 
-  await pusherServer.trigger(
-    "private-chat",
-    "evt::main-chat",
-    validatedPayload,
-  );
+  await pusherServer.trigger("chat", "evt::main-chat", validatedPayload);
 
   await redis.rpush("posts", JSON.stringify(validatedPayload));
 }

@@ -1,0 +1,15 @@
+---
+alwaysApply: false
+---
+
+# Project Structure Guide
+
+- The main entry point for the app is [`app/page.tsx`](mdc:app/page.tsx).
+- API routes are located in [`app/api/`](mdc:app/api/).
+- Shared React components are in [`components/`](mdc:components/), with UI primitives in [`components/ui/`](mdc:components/ui/).
+- Database schema and logic are in [`db/`](mdc:db/).
+- Utility functions and business logic are in [`lib/`](mdc:lib/).
+- Global configuration and setup files are in the project root (e.g., [`next.config.mjs`](mdc:next.config.mjs), [`tailwind.config.ts`](mdc:tailwind.config.ts)).
+- Static assets are in [`public/`](mdc:public/).
+
+Refer to this guide for high-level navigation and file location.
