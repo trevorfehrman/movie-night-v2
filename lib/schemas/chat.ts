@@ -16,6 +16,6 @@ export type ChatMessages = z.infer<typeof ChatMessagesSchema>;
 
 export const ChatMessagePayloadFromClientSchema = z.object({
   message: z.string().min(1),
-  imgUrl: z.string().min(1).optional(),
+  imgUrl: z.string().optional(),
   userFirstName: z.string().min(1).optional().nullish(),
 });

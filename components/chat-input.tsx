@@ -9,7 +9,7 @@ import { Loader, Send } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 
 export function ChatInput() {
-  const { execute, status } = useAction(safeAddChatMessage);
+  const { execute, status, result } = useAction(safeAddChatMessage);
   const [message, setMessage] = React.useState("");
   const { user } = useUser();
 
@@ -17,6 +17,11 @@ export function ChatInput() {
   const userFirstName = user?.firstName;
   return (
     <>
+      {result?.serverError && (
+        <div className="mb-2 text-sm text-red-600">
+          Error: {result.serverError}
+        </div>
+      )}
       <Input
         type="text"
         placeholder="Enter your message"
@@ -24,8 +29,10 @@ export function ChatInput() {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            execute({ message: message, imgUrl, userFirstName });
-            setMessage("");
+            if (message.trim()) {
+              execute({ message: message, imgUrl, userFirstName });
+              setMessage("");
+            }
           }
         }}
         value={message}
@@ -37,8 +44,10 @@ export function ChatInput() {
         variant="outline"
         onClick={(e) => {
           e.preventDefault();
-          execute({ message: message, imgUrl, userFirstName });
-          setMessage("");
+          if (message.trim()) {
+            execute({ message: message, imgUrl, userFirstName });
+            setMessage("");
+          }
         }}
         disabled={status === "executing"}
         className="min-w-10"

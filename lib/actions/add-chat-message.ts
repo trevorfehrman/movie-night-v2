@@ -25,11 +25,14 @@ async function addChatMessage({
   userFirstName?: string | null;
   imgUrl?: string;
 }) {
-  const { userId: clerkUserId, orgId } = await auth();
+  const { userId: clerkUserId } = await auth();
 
-  if (!clerkUserId || !orgId || !userFirstName) {
-    console.log("no clerkUserId, orgId, or userFirstName");
-    return;
+  if (!clerkUserId || !userFirstName) {
+    console.log("no clerkUserId or userFirstName", {
+      clerkUserId: !!clerkUserId,
+      userFirstName: !!userFirstName,
+    });
+    throw new Error("Missing required user information");
   }
 
   const payload = {
@@ -37,7 +40,7 @@ async function addChatMessage({
     clerkUserId,
     userFirstName,
     createdAt: new Date().toString(),
-    imgUrl,
+    imgUrl: imgUrl || "",
     id: nanoid(),
   };
 
