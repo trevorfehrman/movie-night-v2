@@ -33,6 +33,7 @@ const MOVIE_NIGHT_ORDER = [
   "user_2gIGV9xmwe2yJYrVz9gGftyGbVB", // Andy
   "user_2ifGHDhbizNNDwE3nvPLUQRxeCv", // Renee
   "user_2gIJyxv5lCrz77xz24LiDXeAui5", // Michael
+  "user_2ycM9OX1KS292hYw3VB8WfYjNSn", // Carrie
 ];
 
 type User = Awaited<ReturnType<typeof db.query.users.findMany>>[number];
