@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "national treasure", color: "#404040" },
-    { id: 2, text: "national treasure", color: "#E0E0E0" },
-    { id: 3, text: "national treasure", color: "#404040" },
-    { id: 4, text: "national treasure", color: "#E0E0E0" },
-    { id: 5, text: "national treasure", color: "#404040" },
-    { id: 6, text: "national treasure", color: "#E0E0E0" },
+    { id: 1, text: "Childhood Favorites", color: "#404040" },
+    { id: 2, text: "Cage", color: "#E0E0E0" },
+    { id: 3, text: "Blind Spot", color: "#404040" },
+    { id: 4, text: "Animation for Adults", color: "#E0E0E0" },
+    { id: 5, text: "Subtitles", color: "#404040" },
+    { id: 6, text: "Black and White", color: "#E0E0E0" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -137,7 +137,15 @@ export function Spinner({
             textAnchor="middle"
             dominantBaseline="middle"
           >
-            {segment.text}
+            {segment.text.split(" ").map((word, wordIndex, words) => (
+              <tspan
+                key={wordIndex}
+                x="0"
+                dy={wordIndex === 0 ? `${-(words.length - 1) * 8}px` : "16px"}
+              >
+                {word}
+              </tspan>
+            ))}
           </text>
         </g>
       );
