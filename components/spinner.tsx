@@ -24,7 +24,7 @@ export function Spinner({
     { id: 3, text: "Blind Spot", color: "#404040" },
     { id: 4, text: "Animation for Adults", color: "#E0E0E0" },
     { id: 5, text: "Subtitles", color: "#404040" },
-    { id: 6, text: "Black and White", color: "#E0E0E0" },
+    { id: 6, text: "One Word Title", color: "#E0E0E0" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
