@@ -19,12 +19,12 @@ interface SpinnerProps {
 
 export function Spinner({
   segments = [
-    { id: 1, text: "Childhood Favorites", color: "#404040" },
-    { id: 2, text: "Cage", color: "#E0E0E0" },
-    { id: 3, text: "Blind Spot", color: "#404040" },
-    { id: 4, text: "Animation for Adults", color: "#E0E0E0" },
-    { id: 5, text: "Subtitles", color: "#404040" },
-    { id: 6, text: "One Word Title", color: "#E0E0E0" },
+    { id: 1, text: "The Player", color: "#404040" },
+    { id: 2, text: "Chinatown", color: "#E0E0E0" },
+    { id: 3, text: "The Player", color: "#404040" },
+    { id: 4, text: "Chinatown", color: "#E0E0E0" },
+    { id: 5, text: "The Player", color: "#404040" },
+    { id: 6, text: "Chinatown", color: "#E0E0E0" },
   ],
 }: SpinnerProps) {
   const wheelRef = useRef<HTMLDivElement>(null);
