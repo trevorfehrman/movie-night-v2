@@ -49,7 +49,7 @@ const MovieVideoSchema = z.object({
   size: z.number().int(),
   type: z.string(),
   official: z.boolean(),
-  published_at: z.string().datetime({ offset: true }),
+  published_at: z.string(),
   id: z.string(),
 });
 
